@@ -8,6 +8,7 @@ public class Constant {
     public static  String updateUserInfoModel = baseUrl+"updateUserInfoModel";
     public static  String createDailyMeal = baseUrl+"createDailyMeal";
     public static  String getDailyMealByDate = baseUrl+"getDailyMealByDate";
+    public static  String getAllUserApproveStatus = baseUrl+"getAllUserApproveStatus";
 
 
 

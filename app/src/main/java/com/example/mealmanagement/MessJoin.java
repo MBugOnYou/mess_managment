@@ -121,6 +121,13 @@ public class MessJoin extends AppCompatActivity {
             }
 
 
+            try {
+                params.put("approve", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
             final String requestBody = params.toString();
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.updateUserInfoModel, params, new Response.Listener<JSONObject>() {

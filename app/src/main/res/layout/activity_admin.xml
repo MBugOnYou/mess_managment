@@ -145,6 +145,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:id="@+id/lnAddMember"
                 android:background="@drawable/roundrectangle"
                 android:orientation="vertical">
 
@@ -181,6 +182,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:id="@+id/lnRemoveMember"
                 android:background="@drawable/roundrectangle"
                 android:orientation="vertical">
 

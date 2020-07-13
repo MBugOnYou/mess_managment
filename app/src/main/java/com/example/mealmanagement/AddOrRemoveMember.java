@@ -1,15 +1,14 @@
 package com.example.mealmanagement;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.animation.OvershootInterpolator;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -17,214 +16,67 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.mealmanagement.adapter.AddOrRemoveMemberAdapter;
 import com.example.mealmanagement.constant.Constant;
-import com.example.mealmanagement.dao.IDailyMealDao;
 import com.example.mealmanagement.dao.IUserInfoDao;
-import com.example.mealmanagement.imp.DailyMealDao;
 import com.example.mealmanagement.imp.UserInfoDao;
-import com.example.mealmanagement.model.DailyMeal;
 import com.example.mealmanagement.model.UserInfo;
-import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-public class User extends AppCompatActivity {
+public class AddOrRemoveMember extends AppCompatActivity {
+
+    private AddOrRemoveMemberAdapter addOrRemoveMemberAdapter;
+    RecyclerView recycler_view;
+    LinearLayoutManager mLayoutManager;
+    ArrayList<UserInfo>userInfoArrayList;
+
+    int isAddmember = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
-    }
+        setContentView(R.layout.activity_add_or_remove_member);
 
-    public void clickFloatingButton(View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this );
-        View view = getLayoutInflater().inflate(R.layout.dailyinput, null);
+        isAddmember = getIntent().getIntExtra("isAddMember",0);
 
-        final EditText inputBreakfast = (EditText) view.findViewById(R.id.inputBreakfast);
-        final EditText inputLunch = (EditText) view.findViewById(R.id.inputLunch);
-        final EditText inputDinner = (EditText) view.findViewById(R.id.inputDinner);
+        userInfoArrayList = new ArrayList<>();
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        addOrRemoveMemberAdapter = new AddOrRemoveMemberAdapter(isAddmember,userInfoArrayList, AddOrRemoveMember.this, m_onlistner);
+        mLayoutManager = new LinearLayoutManager(AddOrRemoveMember.this);
+        recycler_view.setLayoutManager(mLayoutManager);
+        recycler_view.setItemAnimator(new DefaultItemAnimator());
+        recycler_view.setAdapter(addOrRemoveMemberAdapter);
 
-        final TextView setBreakfast = (TextView) findViewById(R.id.setBreakfast);
-        final TextView setLunch = (TextView) findViewById(R.id.setLunch);
-        final TextView setDinner = (TextView) findViewById(R.id.setDinner);
-
-        builder.setTitle(" Set Meal");
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String breakfast = inputBreakfast.getText().toString();
-                String lunch = inputLunch.getText().toString();
-                String dinner = inputDinner.getText().toString();
-
-                setBreakfast.setText(breakfast);
-                setLunch.setText(lunch);
-                setDinner.setText(dinner);
-
-
-                DailyMeal dailyMeal = new DailyMeal();
-                dailyMeal.setDinner(Integer.parseInt(dinner));
-                dailyMeal.setLunch(Integer.parseInt(lunch));
-                dailyMeal.setBreakfast(Integer.parseInt(breakfast));
-                dailyMeal.setUser_id((int) PreferenceConnector.getID(User.this));
-                dailyMeal.setCreation_date(DateUtil.GetFormatedDateString(new Date()));
-
-
-                SetDailyMeal(dailyMeal);
-
-
-
-
-            }
-        });
-
-        builder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.setCancelable(false);
-        builder.setView( view );
-        builder.show();
 
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
 
 
-        getDailyMealByDate();
+        getUserList();
+
+
 
     }
 
-    private void SetDailyMeal(DailyMeal dailyMeal) {
+    AddOrRemoveMemberAdapter.onSelectedPlaceListener m_onlistner = new AddOrRemoveMemberAdapter.onSelectedPlaceListener() {
+        @Override
+        public void onClick(UserInfo place) {
 
-        try {
-            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
+            MemberAddOrJoinToServer(place);
 
-
-            JSONObject params = new JSONObject();
-
-            try {
-                params.put("user_id", dailyMeal.getUser_id());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("breakfast", dailyMeal.getBreakfast());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("lunch", dailyMeal.getLunch());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("dinner", dailyMeal.getDinner());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                params.put("creation_date", dailyMeal.getCreation_date());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.createDailyMeal, params, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(final JSONObject response) {
-
-                    Log.i("LOG_VOLLEY", response.toString());
-
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-
-                            try {
-
-                                IDailyMealDao iUserDao = new DailyMealDao(
-                                        User.this);
-
-                                ArrayList<DailyMeal> userinfoArrayList;
-
-                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
-
-                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
-
-
-
-
-                                } else {
-
-
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-
-                            }
-
-                        }
-                    }).start();
-
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("LOG_VOLLEY", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-//                @Override
-//                public byte[] getBody() {
-//                    try {
-//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                    } catch (UnsupportedEncodingException uee) {
-//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-//                        return null;
-//                    }
-//                }
-
-                @Override
-                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                    return super.parseNetworkResponse(response);
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            MyApplication.getInstance().getRequestQueue().getCache().clear();
-            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
-        } catch (Exception e) {
-            e.getMessage();
 
         }
+    };
 
-    }
-
-
-
-
-    private void getDailyMealByDate() {
+    private void MemberAddOrJoinToServer(final UserInfo userInfo) {
 
         try {
             // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -234,20 +86,47 @@ public class User extends AppCompatActivity {
 
 
             try {
-                params.put("user_id", PreferenceConnector.getID(User.this));
+                params.put("id", userInfo.getId());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
 
             try {
-                params.put("creation_date", DateUtil.GetFormatedDateString(new Date()));
+                params.put("mess_name", userInfo.getMess_name());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.getDailyMealByDate, params, new Response.Listener<JSONObject>() {
+            try {
+                params.put("manager", userInfo.getManager());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            if(isAddmember==1){
+
+                try {
+                    params.put("approve", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+
+                try {
+                    params.put("approve", 0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+            final String requestBody = params.toString();
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.updateUserInfoModel, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
 
@@ -261,32 +140,159 @@ public class User extends AppCompatActivity {
 
                             try {
 
-                                IDailyMealDao iUserDao = new DailyMealDao(
-                                        User.this);
+                                if (response.getString("success").equals("1")) {
 
-                                final ArrayList<DailyMeal> userinfoArrayList;
-
-                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
-
-                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
 
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
 
-                                            final TextView setBreakfast = (TextView) findViewById(R.id.setBreakfast);
-                                            final TextView setLunch = (TextView) findViewById(R.id.setLunch);
-                                            final TextView setDinner = (TextView) findViewById(R.id.setDinner);
 
-                                            setBreakfast.setText(userinfoArrayList.get(0).getBreakfast()+"");
-                                            setLunch.setText(userinfoArrayList.get(0).getLunch()+"");
-                                            setDinner.setText(userinfoArrayList.get(0).getDinner()+"");
+                                            ArrayList<UserInfo>tempuserinfo = addOrRemoveMemberAdapter.getData();
+
+                                            if(tempuserinfo!=null && tempuserinfo.size()>0){
+                                                for (int i = 0;i <tempuserinfo.size();i++){
+
+                                                    if(tempuserinfo.get(i).getId()== userInfo.getId()){
+                                                        tempuserinfo.remove(i);
+                                                        break;
+                                                    }
+                                                }
+
+                                                addOrRemoveMemberAdapter.setData(tempuserinfo);
+                                                addOrRemoveMemberAdapter.notifyDataSetChanged();
+
+
+
+                                            }
+
+
+
                                         }
                                     });
 
 
 
 
+                                } else {
+
+
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                            }
+
+                        }
+                    }).start();
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+//                @Override
+//                public byte[] getBody() {
+//                    try {
+//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+//                    } catch (UnsupportedEncodingException uee) {
+//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+//                        return null;
+//                    }
+//                }
+
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    return super.parseNetworkResponse(response);
+                }
+            };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            MyApplication.getInstance().getRequestQueue().getCache().clear();
+            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
+        } catch (Exception e) {
+            e.getMessage();
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+    private void getUserList() {
+
+        try {
+            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
+
+
+            JSONObject params = new JSONObject();
+
+            if(isAddmember==1){
+
+                try {
+                    params.put("approve", 0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else {
+
+                try {
+                    params.put("approve", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            final String requestBody = params.toString();
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.getAllUserApproveStatus, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(final JSONObject response) {
+
+                    Log.i("LOG_VOLLEY", response.toString());
+
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            try {
+
+                                IUserInfoDao iUserDao = new UserInfoDao(
+                                        AddOrRemoveMember.this);
+
+                                final ArrayList<UserInfo> userinfoArrayList;
+
+                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
+
+                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
+
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            addOrRemoveMemberAdapter.setData(userinfoArrayList);
+                                            addOrRemoveMemberAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+
+
+
 
                                 } else {
 
@@ -338,6 +344,10 @@ public class User extends AppCompatActivity {
         }
 
     }
+
+
+
+
 
 
 }
