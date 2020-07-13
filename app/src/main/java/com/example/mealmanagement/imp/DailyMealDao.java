@@ -65,6 +65,12 @@ public class DailyMealDao implements IDailyMealDao {
                         } catch (Exception ex) {
                         }
 
+                        try {
+                            appData.setCreation_date(jsonObject.getString("creation_date"));
+                        } catch (Exception ex) {
+                        }
+
+
 
                         AppDataArrayList.add(appData);
                     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -33,30 +34,57 @@ public class MessJoin extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     public void clickJoin(View view) {
-        Intent intent = new Intent( this, User.class);
-        startActivity( intent );
+
+
+        EditText inputMessJoin = (EditText) findViewById(R.id.inputMessJoin);
+
+        if(inputMessJoin.getText().toString().length()<1){
+            return;
+        }
+
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(PreferenceConnector.getID(MessJoin.this));
+        userInfo.setApprove(0);
+        userInfo.setManager(0);
+        userInfo.setMess_name(inputMessJoin.getText().toString());
+
+
+        JoinOrCreate(userInfo,false);
+
+
+
     }
 
     public void clickCreate(View view) {
-        Intent intent = new Intent( this, Admin.class );
-        startActivity( intent );
+
+
+
+        EditText inputMessJoin = (EditText) findViewById(R.id.inputMessJoin);
+
+        if(inputMessJoin.getText().toString().length()<1){
+            return;
+        }
+
+
+
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(PreferenceConnector.getID(MessJoin.this));
+        userInfo.setApprove(0);
+        userInfo.setManager(0);
+        userInfo.setMess_name(inputMessJoin.getText().toString());
+
+
+        JoinOrCreate(userInfo,true);
+
     }
 
 
 
 
-    private void loginwithSocialMedia(UserInfo userInfo, boolean islogin) {
+    private void JoinOrCreate(UserInfo userInfo, final boolean isCreate) {
 
         try {
             // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -65,19 +93,7 @@ public class MessJoin extends AppCompatActivity {
             JSONObject params = new JSONObject();
 
             try {
-                params.put("mail", userInfo.getMail());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("password", userInfo.getPassword());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("name", userInfo.getName());
+                params.put("id", userInfo.getId());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -89,31 +105,25 @@ public class MessJoin extends AppCompatActivity {
             }
 
 
-            try {
-                params.put("manager", userInfo.getManager());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                params.put("approve", userInfo.getApprove());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            String url = "";
-
-            if(islogin){
-                url = Constant.login;
+            if(isCreate) {
+                try {
+                    params.put("manager", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }else{
-                url = Constant.signup;
+
+                try {
+                    params.put("manager", 0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
 
             final String requestBody = params.toString();
 
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,url, params, new Response.Listener<JSONObject>() {
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.updateUserInfoModel, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
 
@@ -127,22 +137,23 @@ public class MessJoin extends AppCompatActivity {
 
                             try {
 
-                                IUserInfoDao iUserDao = new UserInfoDao(
-                                        Signup.this);
-
-                                ArrayList<UserInfo> userinfoArrayList;
-
-                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
-
-                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
+                                if (response.getString("success").equals("1")) {
 
 
-                                    PreferenceConnector.saveUser(Signup.this,userinfoArrayList.get(0));
+                                    //PreferenceConnector.saveUser(MessJoin.this,userinfoArrayList.get(0));
 
 
+                                    if(isCreate){
 
-                                    Intent intent = new Intent( Signup.this, MessJoin.class);
-                                    startActivity( intent );
+                                        Intent intent = new Intent( MessJoin.this, Admin.class );
+                                       startActivity( intent );
+
+                                    }else{
+                                        Intent intent = new Intent( MessJoin.this, User.class );
+                                        startActivity( intent );
+
+                                    }
+
 
 
 

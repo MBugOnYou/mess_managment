@@ -7,6 +7,7 @@ public class DailyMeal {
     int breakfast;
     int lunch;
     int dinner;
+    String creation_date;
 
     public DailyMeal() {
         this.id = 0;
@@ -14,6 +15,7 @@ public class DailyMeal {
         this.breakfast = 0;
         this.lunch = 0;
         this.dinner = 0;
+        this.creation_date="";
     }
 
     public long getId() {
@@ -54,5 +56,14 @@ public class DailyMeal {
 
     public void setDinner(int dinner) {
         this.dinner = dinner;
+    }
+
+
+    public String getCreation_date() {
+        return creation_date;
+    }
+
+    public void setCreation_date(String creation_date) {
+        this.creation_date = creation_date;
     }
 }

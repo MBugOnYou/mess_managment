@@ -142,7 +142,7 @@ public class PreferenceConnector {
     public static long getID(Context context) {
 
 
-        long status = readLong(context, "Id", 0);
+        long status = readLong(context, "id", 0);
 
 
         return status;
