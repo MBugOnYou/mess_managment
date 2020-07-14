@@ -9,6 +9,14 @@ public class Constant {
     public static  String createDailyMeal = baseUrl+"createDailyMeal";
     public static  String getDailyMealByDate = baseUrl+"getDailyMealByDate";
     public static  String getAllUserApproveStatus = baseUrl+"getAllUserApproveStatus";
+    public static  String getAllApprovedUserList = baseUrl+"getAllApprovedUserList";
+    public static  String createDepositMoney = baseUrl+"createDepositMoney";
+    public static  String getDepositMoneyByYearMonth = baseUrl+"getDepositMoneyByYearMonth";
+    public static  String getDepositMoneyByYearMonthAndUserID = baseUrl+"getDepositMoneyByYearMonthAndUserID";
+   public static  String getTotalDailyMealByDate = baseUrl+"getTotalDailyMealByDate";
+
+
+
 
 
 

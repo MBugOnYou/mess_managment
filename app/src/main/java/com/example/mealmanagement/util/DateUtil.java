@@ -182,6 +182,33 @@ public class DateUtil {
 
 	}
 
+	public static String getYear(Date formatedDate) {
+		String formatedDateString = "";
+		try {
+			if (formatedDate != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy");
+
+				formatedDateString = sdf.format(formatedDate);
+			}
+		} catch (Exception ex) {
+			Log.w("Exception", ex.getMessage());
+		}
+		return formatedDateString;
+
+	}
+
+
+	public static String getMonth(int month){
+		String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+		return monthNames[month];
+	}
+
+
+
+
+
+
 	public Date GetFormatedTime(int hour, int minute) {
 		Date date = new Date(1971, 1, 1, hour, minute);
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -31,14 +32,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class User extends AppCompatActivity {
+
+
+    LinearLayout linDepositAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+        linDepositAmount =findViewById(R.id.linDepositAmount);
+        linDepositAmount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(User.this,DepositAmountActivity.class);
+                intent.putExtra("isFromAdmin",0);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void clickFloatingButton(View v) {
@@ -66,13 +82,17 @@ public class User extends AppCompatActivity {
                 setDinner.setText(dinner);
 
 
+                Calendar c = Calendar.getInstance();
+                String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+
                 DailyMeal dailyMeal = new DailyMeal();
                 dailyMeal.setDinner(Integer.parseInt(dinner));
                 dailyMeal.setLunch(Integer.parseInt(lunch));
                 dailyMeal.setBreakfast(Integer.parseInt(breakfast));
                 dailyMeal.setUser_id((int) PreferenceConnector.getID(User.this));
                 dailyMeal.setCreation_date(DateUtil.GetFormatedDateString(new Date()));
-
+                dailyMeal.setYr_month(yearMonth);
+                dailyMeal.setTotal_meal(dailyMeal.getDinner()+dailyMeal.getBreakfast()+dailyMeal.getLunch());
 
                 SetDailyMeal(dailyMeal);
 
@@ -140,6 +160,19 @@ public class User extends AppCompatActivity {
 
             try {
                 params.put("creation_date", dailyMeal.getCreation_date());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("total_meal", dailyMeal.getTotal_meal());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                params.put("yr_month", dailyMeal.getYr_month());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -220,7 +253,6 @@ public class User extends AppCompatActivity {
         }
 
     }
-
 
 
 

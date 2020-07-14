@@ -8,6 +8,9 @@ public class DailyMeal {
     int lunch;
     int dinner;
     String creation_date;
+    int total_meal;
+    String yr_month;
+
 
     public DailyMeal() {
         this.id = 0;
@@ -16,6 +19,24 @@ public class DailyMeal {
         this.lunch = 0;
         this.dinner = 0;
         this.creation_date="";
+        this.total_meal = 0;
+        this.yr_month="";
+    }
+
+    public String getYr_month() {
+        return yr_month;
+    }
+
+    public void setYr_month(String yr_month) {
+        this.yr_month = yr_month;
+    }
+
+    public int getTotal_meal() {
+        return total_meal;
+    }
+
+    public void setTotal_meal(int total_meal) {
+        this.total_meal = total_meal;
     }
 
     public long getId() {

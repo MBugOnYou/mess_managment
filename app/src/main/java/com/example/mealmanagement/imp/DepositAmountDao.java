@@ -2,8 +2,10 @@ package com.example.mealmanagement.imp;
 
 import android.content.Context;
 
-import com.example.mealmanagement.dao.IDailyMealDao;
-import com.example.mealmanagement.model.DailyMeal;
+import com.example.mealmanagement.dao.IDailyCostDao;
+import com.example.mealmanagement.dao.IDepositAmount;
+import com.example.mealmanagement.model.DailyCost;
+import com.example.mealmanagement.model.DepositAmount;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,20 +16,20 @@ import java.util.ArrayList;
 /**
  * Created by Hafiz_Hp on 12/18/2015.
  */
-public class DailyMealDao implements IDailyMealDao {
+public class DepositAmountDao implements IDepositAmount {
 
-    public DailyMealDao(Context activity) {
+    public DepositAmountDao(Context activity) {
 
 
     }
 
 
     @Override
-    public ArrayList<DailyMeal> GetAppdataFromJSONObject(JSONObject json) throws Exception {
+    public ArrayList<DepositAmount> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<DailyMeal> AppDataArrayList = new ArrayList<>();
+        ArrayList<DepositAmount> AppDataArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
-        DailyMeal appData = null;
+        DepositAmount appData = null;
         JSONObject jsonObject = null;
         try {
             JSONArray jsonArray = json.getJSONArray("data");
@@ -39,7 +41,7 @@ public class DailyMealDao implements IDailyMealDao {
                     for (int k = 0; k < jsonArray.length(); k++) {
 
                         jsonObject = jsonArray.getJSONObject(k);
-                        appData = new DailyMeal();
+                        appData = new DepositAmount();
 
 
                         try {
@@ -51,17 +53,7 @@ public class DailyMealDao implements IDailyMealDao {
                         } catch (Exception ex) {
                         }
                         try {
-                            appData.setBreakfast(jsonObject.getInt("breakfast"));
-                        } catch (Exception ex) {
-                        }
-
-                        try {
-                            appData.setLunch(jsonObject.getInt("lunch"));
-                        } catch (Exception ex) {
-                        }
-
-                        try {
-                            appData.setDinner(jsonObject.getInt("dinner"));
+                            appData.setAmount(jsonObject.getInt("amount"));
                         } catch (Exception ex) {
                         }
 
@@ -71,15 +63,10 @@ public class DailyMealDao implements IDailyMealDao {
                         }
 
                         try {
-                            appData.setTotal_meal(jsonObject.getInt("total_meal"));
-                        } catch (Exception ex) {
-                        }
-
-
-                        try {
                             appData.setYr_month(jsonObject.getString("yr_month"));
                         } catch (Exception ex) {
                         }
+
 
 
                         AppDataArrayList.add(appData);
