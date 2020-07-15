@@ -6,11 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.animation.OvershootInterpolator;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -19,11 +17,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.example.mealmanagement.adapter.AddOrRemoveMemberAdapter;
+import com.example.mealmanagement.adapter.ActivityTotalMealAdapter;
+import com.example.mealmanagement.adapter.DepositMoneyAdapter1;
 import com.example.mealmanagement.constant.Constant;
-import com.example.mealmanagement.dao.IUserInfoDao;
-import com.example.mealmanagement.imp.UserInfoDao;
-import com.example.mealmanagement.model.UserInfo;
+import com.example.mealmanagement.dao.IDailyMealDao;
+import com.example.mealmanagement.dao.IDepositAmount;
+import com.example.mealmanagement.imp.DailyMealDao;
+import com.example.mealmanagement.imp.DepositAmountDao;
+import com.example.mealmanagement.model.DailyMeal;
+import com.example.mealmanagement.model.DepositAmount;
+import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
@@ -31,40 +34,54 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-public class AddOrRemoveMember extends AppCompatActivity {
+public class TotalMealActivity extends AppCompatActivity {
     KProgressHUD hud;
-    private AddOrRemoveMemberAdapter addOrRemoveMemberAdapter;
+    ActivityTotalMealAdapter activityTotalMealAdapter;
     RecyclerView recycler_view;
     LinearLayoutManager mLayoutManager;
-    ArrayList<UserInfo>userInfoArrayList;
-
-    int isAddmember = 1;
-
+    ArrayList<DailyMeal> dailyMealArrayList;
+    int isFromAdmin = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_or_remove_member);
+        setContentView(R.layout.activity_total_meal);
 
-        isAddmember = getIntent().getIntExtra("isAddMember",0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        if(isAddmember==0) {
-            getSupportActionBar().setTitle("Remove Member");
-        }else{
-            getSupportActionBar().setTitle("Add Member");
-        }
+        getSupportActionBar().setTitle("Total Meal");
 
-        userInfoArrayList = new ArrayList<>();
+
+        isFromAdmin = getIntent().getIntExtra("isFromAdmin",0);
+
+        dailyMealArrayList = new ArrayList<>();
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        addOrRemoveMemberAdapter = new AddOrRemoveMemberAdapter(isAddmember,userInfoArrayList, AddOrRemoveMember.this, m_onlistner);
-        mLayoutManager = new LinearLayoutManager(AddOrRemoveMember.this);
+        activityTotalMealAdapter = new ActivityTotalMealAdapter(dailyMealArrayList, TotalMealActivity.this, m_onlistner);
+        mLayoutManager = new LinearLayoutManager(TotalMealActivity.this);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
-        recycler_view.setAdapter(addOrRemoveMemberAdapter);
+        recycler_view.setAdapter(activityTotalMealAdapter);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(TotalMealActivity.this);
     }
 
     @Override
@@ -72,73 +89,51 @@ public class AddOrRemoveMember extends AppCompatActivity {
         super.onResume();
 
 
-        getUserList();
+        if(isFromAdmin==0) {
+            getTotalMealByMonthAndUserID();
+        }else{
 
-
+            getTotalMealByMonth();
+        }
 
     }
 
-    AddOrRemoveMemberAdapter.onSelectedPlaceListener m_onlistner = new AddOrRemoveMemberAdapter.onSelectedPlaceListener() {
+    ActivityTotalMealAdapter.onSelectedPlaceListener m_onlistner = new ActivityTotalMealAdapter.onSelectedPlaceListener() {
         @Override
-        public void onClick(UserInfo place) {
+        public void onClick(DailyMeal place) {
 
-            MemberAddOrJoinToServer(place);
+
 
 
         }
     };
 
-    private void MemberAddOrJoinToServer(final UserInfo userInfo) {
+
+
+
+    private void getTotalMealByMonth() {
+
+        showProgress(TotalMealActivity.this);
+
+
+        Calendar c = Calendar.getInstance();
+        String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
 
         try {
-            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-
 
             JSONObject params = new JSONObject();
 
 
             try {
-                params.put("id", userInfo.getId());
+                params.put("yr_month", yearMonth);
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-
-            try {
-                params.put("mess_name", userInfo.getMess_name());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                params.put("manager", userInfo.getManager());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            if(isAddmember==1){
-
-                try {
-                    params.put("approve", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }else{
-
-                try {
-                    params.put("approve", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
             }
 
 
             final String requestBody = params.toString();
 
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.updateUserInfoModel, params, new Response.Listener<JSONObject>() {
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Constant.getTotalMealByMonth, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
 
@@ -152,160 +147,32 @@ public class AddOrRemoveMember extends AppCompatActivity {
 
                             try {
 
-                                if (response.getString("success").equals("1")) {
+                                IDailyMealDao iUserDao = new DailyMealDao(
+                                        TotalMealActivity.this);
 
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-
-                                            ArrayList<UserInfo>tempuserinfo = addOrRemoveMemberAdapter.getData();
-
-                                            if(tempuserinfo!=null && tempuserinfo.size()>0){
-                                                for (int i = 0;i <tempuserinfo.size();i++){
-
-                                                    if(tempuserinfo.get(i).getId()== userInfo.getId()){
-                                                        tempuserinfo.remove(i);
-                                                        break;
-                                                    }
-                                                }
-
-                                                addOrRemoveMemberAdapter.setData(tempuserinfo);
-                                                addOrRemoveMemberAdapter.notifyDataSetChanged();
-
-
-
-                                            }
-
-
-
-                                        }
-                                    });
-
-
-
-
-                                } else {
-
-
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-
-                            }
-
-                        }
-                    }).start();
-
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("LOG_VOLLEY", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-//                @Override
-//                public byte[] getBody() {
-//                    try {
-//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                    } catch (UnsupportedEncodingException uee) {
-//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-//                        return null;
-//                    }
-//                }
-
-                @Override
-                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                    return super.parseNetworkResponse(response);
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            MyApplication.getInstance().getRequestQueue().getCache().clear();
-            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
-        } catch (Exception e) {
-            e.getMessage();
-
-        }
-
-    }
-
-
-
-
-
-
-
-
-    private void getUserList() {
-
-        showProgress(AddOrRemoveMember.this);
-
-        try {
-            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-
-
-            JSONObject params = new JSONObject();
-
-            if(isAddmember==1){
-
-                try {
-                    params.put("approve", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }else {
-
-                try {
-                    params.put("approve", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            final String requestBody = params.toString();
-
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.getAllUserApproveStatus, params, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(final JSONObject response) {
-
-                    Log.i("LOG_VOLLEY", response.toString());
-
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-
-                            try {
-
-                                IUserInfoDao iUserDao = new UserInfoDao(
-                                        AddOrRemoveMember.this);
-
-                                final ArrayList<UserInfo> userinfoArrayList;
+                                final ArrayList<DailyMeal> userinfoArrayList;
 
                                 userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
 
                                 if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
 
-
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            addOrRemoveMemberAdapter.setData(userinfoArrayList);
-                                            addOrRemoveMemberAdapter.notifyDataSetChanged();
+
+
+
+                                            activityTotalMealAdapter.setData(userinfoArrayList);
+                                            activityTotalMealAdapter.notifyDataSetChanged();
+
+
+
+
+
+
+
                                         }
                                     });
-
-
 
 
                                 } else {
@@ -321,7 +188,8 @@ public class AddOrRemoveMember extends AppCompatActivity {
                         }
                     }).start();
 
-                    dismissProgress(AddOrRemoveMember.this);
+
+                    dismissProgress(TotalMealActivity.this);
 
 
                 }
@@ -329,7 +197,7 @@ public class AddOrRemoveMember extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
-                    dismissProgress(AddOrRemoveMember.this);
+                    dismissProgress(TotalMealActivity.this);
                 }
             }) {
                 @Override
@@ -337,15 +205,7 @@ public class AddOrRemoveMember extends AppCompatActivity {
                     return "application/json; charset=utf-8";
                 }
 
-//                @Override
-//                public byte[] getBody() {
-//                    try {
-//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                    } catch (UnsupportedEncodingException uee) {
-//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-//                        return null;
-//                    }
-//                }
+//
 
                 @Override
                 protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -357,11 +217,139 @@ public class AddOrRemoveMember extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
-            dismissProgress(AddOrRemoveMember.this);
+            dismissProgress(TotalMealActivity.this);
 
         }
 
+
+
+
     }
+
+
+
+
+    private void getTotalMealByMonthAndUserID() {
+
+        showProgress(TotalMealActivity.this);
+
+
+        Calendar c = Calendar.getInstance();
+        String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+
+        try {
+
+            JSONObject params = new JSONObject();
+
+
+            try {
+                params.put("yr_month", yearMonth);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("user_id", PreferenceConnector.getID(TotalMealActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+            final String requestBody = params.toString();
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Constant.getTotalMealByMonthAndUserID, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(final JSONObject response) {
+
+                    Log.i("LOG_VOLLEY", response.toString());
+
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            try {
+
+                                IDailyMealDao iUserDao = new DailyMealDao(
+                                        TotalMealActivity.this);
+
+                                final ArrayList<DailyMeal> userinfoArrayList;
+
+                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
+
+                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+
+
+                                            activityTotalMealAdapter.setData(userinfoArrayList);
+                                            activityTotalMealAdapter.notifyDataSetChanged();
+
+
+
+
+
+
+
+                                        }
+                                    });
+
+
+                                } else {
+
+
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                            }
+
+                        }
+                    }).start();
+
+                    dismissProgress(TotalMealActivity.this);
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(TotalMealActivity.this);
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+//
+
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    return super.parseNetworkResponse(response);
+                }
+            };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            MyApplication.getInstance().getRequestQueue().getCache().clear();
+            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
+        } catch (Exception e) {
+            e.getMessage();
+            dismissProgress(TotalMealActivity.this);
+
+        }
+
+
+
+
+    }
+
 
     void showProgress(final Context context) {
 
@@ -405,24 +393,6 @@ public class AddOrRemoveMember extends AppCompatActivity {
             e.getMessage();
 
         }
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-        }
-        return (super.onOptionsItemSelected(menuItem));
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //Bungee.swipeRight(LatestCueCard.this);
-        Animatoo.animateSwipeRight(AddOrRemoveMember.this);
     }
 
 

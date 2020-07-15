@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +25,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.mealmanagement.adapter.AddOrRemoveMemberAdapter;
 import com.example.mealmanagement.adapter.DepositMoneyAdapter1;
 import com.example.mealmanagement.constant.Constant;
@@ -34,6 +37,7 @@ import com.example.mealmanagement.model.DepositAmount;
 import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +48,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DepositAmountActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
+    KProgressHUD hud;
     ArrayList<UserInfo> userinfoArrayList;
     EditText edtAmount;
     Button btnDeposit;
@@ -63,6 +67,11 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit_amount);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Deposit Amount");
 
         topView = findViewById(R.id.topView);
 
@@ -120,6 +129,9 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
     };
 
     private void depositAmountToServer(String amount) {
+
+
+        showProgress(DepositAmountActivity.this);
 
         Calendar c = Calendar.getInstance();
         String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
@@ -204,11 +216,15 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
                     }).start();
 
 
+                    dismissProgress(DepositAmountActivity.this);
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(DepositAmountActivity.this);
                 }
             }) {
                 @Override
@@ -236,6 +252,7 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(DepositAmountActivity.this);
 
         }
 
@@ -243,8 +260,6 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
     }
 
     private void getAllDepositAmountFromServer() {
-
-
 
 
         Calendar c = Calendar.getInstance();
@@ -320,12 +335,15 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
                         }
                     }).start();
 
+                    dismissProgress(DepositAmountActivity.this);
+
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(DepositAmountActivity.this);
                 }
             }) {
                 @Override
@@ -345,6 +363,7 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(DepositAmountActivity.this);
 
         }
 
@@ -378,6 +397,7 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
     private void getAlldepositAmountByUserIDFromServer() {
 
 
+        showProgress(DepositAmountActivity.this);
 
         Calendar c = Calendar.getInstance();
         String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
@@ -458,12 +478,15 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
                         }
                     }).start();
 
+                    dismissProgress(DepositAmountActivity.this);
+
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(DepositAmountActivity.this);
                 }
             }) {
                 @Override
@@ -483,6 +506,7 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(DepositAmountActivity.this);
 
         }
 
@@ -554,6 +578,8 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
 
     private void getUserList() {
 
+        showProgress(DepositAmountActivity.this);
+
         try {
 
             JSONObject params = new JSONObject();
@@ -622,12 +648,15 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
                         }
                     }).start();
 
+                    dismissProgress(DepositAmountActivity.this);
+
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(DepositAmountActivity.this);
                 }
             }) {
                 @Override
@@ -646,6 +675,7 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(DepositAmountActivity.this);
 
         }
 
@@ -655,10 +685,66 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
 
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(DepositAmountActivity.this);
+    }
 
 
+    void showProgress(final Context context) {
 
 
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    hud = KProgressHUD.create(context)
+                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                            .setLabel("Please wait")
+                            .setCancellable(true)
+                            .setAnimationSpeed(2)
+                            .setDimAmount(0.5f)
+                            .show();
+                }
+            });
+
+        } catch (Exception e) {
+
+
+        }
+
+    }
+
+    void dismissProgress(Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (hud != null && hud.isShowing()) {
+                        hud.dismiss();
+                        hud = null;
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.getMessage();
+
+        }
+    }
 
 
 }

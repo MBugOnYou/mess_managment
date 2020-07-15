@@ -7,62 +7,97 @@
     android:orientation="vertical"
     tools:context=".Signup">
 
-    <EditText
-        android:id="@+id/inputNickname"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/roundrectangle"
-        android:ems="10"
-        android:hint="Nickname"
-        android:inputType="textPersonName"
-        android:paddingLeft="15dp"
-        android:textSize="22sp" />
 
-    <EditText
-        android:id="@+id/inputMail"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/roundrectangle"
-        android:ems="10"
-        android:hint="E-mail address"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="15dp"
-        android:textSize="22sp" />
-
-    <EditText
-        android:id="@+id/inputPassword"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/roundrectangle"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="15dp"
-        android:textSize="22sp" />
-
-    <Button
-        android:id="@+id/Signup"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/roundbutton"
-        android:onClick="clickSignup"
-        android:text="Sign up"
-        android:textSize="22sp" />
+        android:layout_height="wrap_content">
+
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:text="Sign In"
+            android:id="@+id/signinRadio"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+
+        </RadioButton>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:text="Sign Up"
+            android:id="@+id/signupRadio"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+
+        </RadioButton>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="160dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputNickname"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/roundrectangle"
+            android:ems="10"
+            android:hint="Nickname"
+            android:inputType="textPersonName"
+            android:paddingLeft="15dp"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/inputMail"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/roundrectangle"
+            android:ems="10"
+            android:hint="E-mail address"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="15dp"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/roundrectangle"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingLeft="15dp"
+            android:textSize="22sp" />
+
+
+    </LinearLayout>
+
+
+
+
 
     <TextView
         android:id="@+id/textView2"
@@ -71,17 +106,46 @@
         android:layout_margin="4dp"
         android:gravity="center"
         android:text="or"
+        android:visibility="gone"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/Signin"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="4dp"
-        android:background="@drawable/roundbutton"
-        android:onClick="clickSignin"
-        android:text="Sign in"
-        android:textSize="22sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            android:id="@+id/Signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:background="@drawable/roundbutton"
+            android:onClick="clickSignin"
+            android:text="Sign in"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/Signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/roundbutton"
+            android:onClick="clickSignup"
+            android:text="Sign up"
+            android:textSize="22sp" />
+
+
+
+
+    </LinearLayout>
+
+
+
+
 </LinearLayout>

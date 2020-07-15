@@ -14,6 +14,8 @@ public class Constant {
     public static  String getDepositMoneyByYearMonth = baseUrl+"getDepositMoneyByYearMonth";
     public static  String getDepositMoneyByYearMonthAndUserID = baseUrl+"getDepositMoneyByYearMonthAndUserID";
    public static  String getTotalDailyMealByDate = baseUrl+"getTotalDailyMealByDate";
+    public static  String getTotalMealByMonthAndUserID = baseUrl+"getTotalMealByMonthAndUserID";
+    public static  String getTotalMealByMonth = baseUrl+"getTotalMealByMonth";
 
 
 

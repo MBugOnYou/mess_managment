@@ -3,10 +3,13 @@ package com.example.mealmanagement;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.mealmanagement.constant.Constant;
 import com.example.mealmanagement.dao.IDailyMealDao;
 import com.example.mealmanagement.dao.IUserInfoDao;
@@ -27,6 +31,7 @@ import com.example.mealmanagement.model.DailyMeal;
 import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,13 +42,15 @@ import java.util.Date;
 
 public class User extends AppCompatActivity {
 
-
-    LinearLayout linDepositAmount;
+    KProgressHUD hud;
+    LinearLayout linDepositAmount,lintotalmeal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+        getSupportActionBar().setTitle("User Panel");
 
         linDepositAmount =findViewById(R.id.linDepositAmount);
         linDepositAmount.setOnClickListener(new View.OnClickListener() {
@@ -52,8 +59,25 @@ public class User extends AppCompatActivity {
                 Intent intent = new Intent(User.this,DepositAmountActivity.class);
                 intent.putExtra("isFromAdmin",0);
                 startActivity(intent);
+                Animatoo.animateSwipeLeft(User.this);
             }
         });
+
+
+
+        lintotalmeal =findViewById(R.id.lintotalmeal);
+        lintotalmeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(User.this,TotalMealActivity.class);
+                intent.putExtra("isFromAdmin",0);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(User.this);
+            }
+        });
+
+
+
 
     }
 
@@ -126,6 +150,8 @@ public class User extends AppCompatActivity {
     }
 
     private void SetDailyMeal(DailyMeal dailyMeal) {
+
+        showProgress(User.this);
 
         try {
             // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -217,11 +243,15 @@ public class User extends AppCompatActivity {
                     }).start();
 
 
+                    dismissProgress(User.this);
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(User.this);
                 }
             }) {
                 @Override
@@ -249,6 +279,7 @@ public class User extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(User.this);
 
         }
 
@@ -257,6 +288,8 @@ public class User extends AppCompatActivity {
 
 
     private void getDailyMealByDate() {
+
+        showProgress(User.this);
 
         try {
             // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -333,12 +366,15 @@ public class User extends AppCompatActivity {
                         }
                     }).start();
 
+                    dismissProgress(User.this);
+
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(User.this);
                 }
             }) {
                 @Override
@@ -366,10 +402,87 @@ public class User extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(User.this);
 
         }
 
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.logout) {
+            PreferenceConnector.LogoutsaveUser(User.this);
+            startActivity(new Intent(User.this,Signup.class));
+            finish();
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(User.this);
+    }
+
+    void showProgress(final Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    hud = KProgressHUD.create(context)
+                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                            .setLabel("Please wait")
+                            .setCancellable(true)
+                            .setAnimationSpeed(2)
+                            .setDimAmount(0.5f)
+                            .show();
+                }
+            });
+
+        } catch (Exception e) {
+
+
+        }
+
+    }
+
+    void dismissProgress(Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (hud != null && hud.isShowing()) {
+                        hud.dismiss();
+                        hud = null;
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.getMessage();
+
+        }
+    }
 }

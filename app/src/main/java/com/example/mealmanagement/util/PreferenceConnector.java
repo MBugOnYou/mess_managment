@@ -35,9 +35,38 @@ public class PreferenceConnector {
         writeString(context, "mess_name", userInfo.getMess_name());
         writeInteger(context, "manager", userInfo.getManager());
         writeInteger(context, "approve", userInfo.getApprove());
+    }
+
+
+    public static void LogoutsaveUser(Context context) {
+
+        writeLong(context, "id", 0);
+        writeString(context, "name", "");
+        writeString(context, "mail", "");
+        writeString(context, "password", "");
+        writeString(context, "mess_name", "");
+        writeInteger(context, "manager", 0);
+        writeInteger(context, "approve", 0);
+    }
 
 
 
+    public static int getmanager(Context context) {
+
+
+        int manager = readInteger(context, "manager", 0);
+
+
+        return manager;
+    }
+
+    public static int getapprove(Context context) {
+
+
+        int approve = readInteger(context, "approve", 0);
+
+
+        return approve;
     }
 
 

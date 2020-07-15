@@ -2,9 +2,11 @@ package com.example.mealmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -14,11 +16,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.mealmanagement.constant.Constant;
 import com.example.mealmanagement.dao.IUserInfoDao;
 import com.example.mealmanagement.imp.UserInfoDao;
 import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.PreferenceConnector;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +30,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MessJoin extends AppCompatActivity {
-
+    KProgressHUD hud;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mess_join);
+
+        getSupportActionBar().setTitle("Mess Join Or Create");
+
+
     }
 
 
@@ -85,6 +93,8 @@ public class MessJoin extends AppCompatActivity {
 
 
     private void JoinOrCreate(UserInfo userInfo, final boolean isCreate) {
+
+        showProgress(MessJoin.this);
 
         try {
             // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -154,10 +164,12 @@ public class MessJoin extends AppCompatActivity {
 
                                         Intent intent = new Intent( MessJoin.this, Admin.class );
                                        startActivity( intent );
+                                        Animatoo.animateSwipeLeft(MessJoin.this);
 
                                     }else{
                                         Intent intent = new Intent( MessJoin.this, User.class );
                                         startActivity( intent );
+                                        Animatoo.animateSwipeLeft(MessJoin.this);
 
                                     }
 
@@ -177,12 +189,14 @@ public class MessJoin extends AppCompatActivity {
                         }
                     }).start();
 
+                    dismissProgress(MessJoin.this);
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(MessJoin.this);
                 }
             }) {
                 @Override
@@ -210,6 +224,7 @@ public class MessJoin extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
+            dismissProgress(MessJoin.this);
 
         }
 
@@ -217,6 +232,65 @@ public class MessJoin extends AppCompatActivity {
 
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(MessJoin.this);
+    }
+
+
+    void showProgress(final Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    hud = KProgressHUD.create(context)
+                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                            .setLabel("Please wait")
+                            .setCancellable(true)
+                            .setAnimationSpeed(2)
+                            .setDimAmount(0.5f)
+                            .show();
+                }
+            });
+
+        } catch (Exception e) {
+
+
+        }
+
+    }
+
+    void dismissProgress(Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (hud != null && hud.isShowing()) {
+                        hud.dismiss();
+                        hud = null;
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.getMessage();
+
+        }
+    }
 
 }
