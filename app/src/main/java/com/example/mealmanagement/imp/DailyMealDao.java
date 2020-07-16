@@ -81,6 +81,11 @@ public class DailyMealDao implements IDailyMealDao {
                         } catch (Exception ex) {
                         }
 
+                        try {
+                            appData.setName(jsonObject.getString("name"));
+                        } catch (Exception ex) {
+                        }
+
 
                         AppDataArrayList.add(appData);
                     }

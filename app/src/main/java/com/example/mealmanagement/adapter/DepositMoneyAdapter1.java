@@ -25,13 +25,14 @@ public class DepositMoneyAdapter1 extends RecyclerView.Adapter<DepositMoneyAdapt
     int isAddmember = 0;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtname1,txtamount;
+        public TextView txtname1,txtamount,txtdate;
 
 
         public MyViewHolder(View view) {
             super(view);
             txtname1 = (TextView) view.findViewById(R.id.txtname1);
             txtamount = (TextView) view.findViewById(R.id.txtamount);
+            txtdate = (TextView) view.findViewById(R.id.txtdate);
 
         }
     }
@@ -57,9 +58,9 @@ public class DepositMoneyAdapter1 extends RecyclerView.Adapter<DepositMoneyAdapt
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final DepositAmount place = placelist.get(position);
 
-        holder.txtname1.setText(place.getUser_id()+"");
+        holder.txtname1.setText(place.getName()+"");
         holder.txtamount.setText(place.getAmount()+"");
-
+        holder.txtdate.setText(place.getCreation_date()+"");
 
 
 

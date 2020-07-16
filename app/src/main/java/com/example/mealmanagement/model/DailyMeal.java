@@ -10,6 +10,7 @@ public class DailyMeal {
     String creation_date;
     int total_meal;
     String yr_month;
+    String name;
 
 
     public DailyMeal() {
@@ -21,6 +22,7 @@ public class DailyMeal {
         this.creation_date="";
         this.total_meal = 0;
         this.yr_month="";
+        this.name="";
     }
 
     public String getYr_month() {
@@ -86,5 +88,14 @@ public class DailyMeal {
 
     public void setCreation_date(String creation_date) {
         this.creation_date = creation_date;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

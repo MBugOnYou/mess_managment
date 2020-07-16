@@ -24,13 +24,14 @@ public class ActivityTotalMealAdapter extends RecyclerView.Adapter<ActivityTotal
     int isAddmember = 0;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtCreationDate,txtamount;
+        public TextView txtCreationDate,txttotalmeal,txtname;
 
 
         public MyViewHolder(View view) {
             super(view);
             txtCreationDate = (TextView) view.findViewById(R.id.txtCreationDate);
-            txtamount = (TextView) view.findViewById(R.id.txtamount);
+            txttotalmeal = (TextView) view.findViewById(R.id.txttotalmeal);
+            txtname = (TextView) view.findViewById(R.id.txtname);
 
         }
     }
@@ -57,7 +58,8 @@ public class ActivityTotalMealAdapter extends RecyclerView.Adapter<ActivityTotal
         final DailyMeal place = placelist.get(position);
 
         holder.txtCreationDate.setText(place.getCreation_date()+"");
-        holder.txtamount.setText(place.getTotal_meal()+"");
+        holder.txttotalmeal.setText(place.getTotal_meal()+"");
+        holder.txtname.setText(place.getName()+"");
 
 
     }

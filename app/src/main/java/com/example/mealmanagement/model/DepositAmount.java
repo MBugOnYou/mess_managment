@@ -7,6 +7,7 @@ public class DepositAmount {
     int amount;
     String creation_date;
     String yr_month;
+    String name;
 
 
     public DepositAmount() {
@@ -15,7 +16,10 @@ public class DepositAmount {
         this.user_id = 0;
         this.creation_date = "";
         this.yr_month = "";
+        this.name = "";
     }
+
+
 
 
     public long getId() {
@@ -56,5 +60,13 @@ public class DepositAmount {
 
     public void setYr_month(String yr_month) {
         this.yr_month = yr_month;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

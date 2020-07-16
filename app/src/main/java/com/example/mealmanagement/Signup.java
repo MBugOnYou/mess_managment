@@ -287,10 +287,26 @@ public class Signup extends AppCompatActivity {
                                     PreferenceConnector.saveUser(Signup.this,userinfoArrayList.get(0));
 
 
+                                    int manager = PreferenceConnector.getmanager(Signup.this);
+                                    int approve = PreferenceConnector.getapprove(Signup.this);
 
-                                    Intent intent = new Intent( Signup.this, MessJoin.class);
-                                    startActivity( intent );
-                                    Animatoo.animateSwipeLeft(Signup.this);
+                                    if(manager==1){
+                                        startActivity(new Intent(Signup.this,Admin.class));
+                                        Animatoo.animateSwipeLeft(Signup.this);
+                                    }else if(manager == 0 && approve==1){
+
+                                        Intent intent = new Intent(Signup.this, User.class);
+                                        startActivity(intent);
+                                        Animatoo.animateSwipeLeft(Signup.this);
+
+                                    }
+                                    else {
+                                        Intent intent = new Intent(Signup.this, MessJoin.class);
+                                        startActivity(intent);
+                                        Animatoo.animateSwipeLeft(Signup.this);
+                                    }
+
+                                    finish();
 
 
 
