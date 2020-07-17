@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.animation.OvershootInterpolator;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -19,11 +20,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.example.mealmanagement.adapter.AddOrRemoveMemberAdapter;
+import com.example.mealmanagement.adapter.DailyCostAdapter;
+import com.example.mealmanagement.adapter.DepositMoneyAdapter1;
 import com.example.mealmanagement.constant.Constant;
-import com.example.mealmanagement.dao.IUserInfoDao;
-import com.example.mealmanagement.imp.UserInfoDao;
-import com.example.mealmanagement.model.UserInfo;
+import com.example.mealmanagement.dao.IDailyCostDao;
+import com.example.mealmanagement.dao.IDepositAmount;
+import com.example.mealmanagement.imp.DailyCostDao;
+import com.example.mealmanagement.imp.DepositAmountDao;
+import com.example.mealmanagement.model.DailyCost;
+import com.example.mealmanagement.model.DepositAmount;
+import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
@@ -31,114 +37,121 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-public class AddOrRemoveMember extends AppCompatActivity {
-    KProgressHUD hud;
-    private AddOrRemoveMemberAdapter addOrRemoveMemberAdapter;
+public class DailyCostActivity extends AppCompatActivity {
+
+    EditText edtAmount;
+    Button btnAdd;
+
+    DailyCostAdapter dailyCostAdapter;
     RecyclerView recycler_view;
     LinearLayoutManager mLayoutManager;
-    ArrayList<UserInfo>userInfoArrayList;
-
-    int isAddmember = 1;
+    ArrayList<DailyCost> depositAmountArrayList;
+    KProgressHUD hud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_or_remove_member);
-
-        isAddmember = getIntent().getIntExtra("isAddMember",0);
+        setContentView(R.layout.activity_daily_cost);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        if(isAddmember==0) {
-            getSupportActionBar().setTitle("Remove Member");
-        }else{
-            getSupportActionBar().setTitle("Add Member");
-        }
+        getSupportActionBar().setTitle("Daily Cost");
 
-        userInfoArrayList = new ArrayList<>();
+
+
+        depositAmountArrayList = new ArrayList<>();
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        addOrRemoveMemberAdapter = new AddOrRemoveMemberAdapter(isAddmember,userInfoArrayList, AddOrRemoveMember.this, m_onlistner);
-        mLayoutManager = new LinearLayoutManager(AddOrRemoveMember.this);
+        dailyCostAdapter = new DailyCostAdapter(depositAmountArrayList, DailyCostActivity.this, m_onlistner);
+        mLayoutManager = new LinearLayoutManager(DailyCostActivity.this);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
-        recycler_view.setAdapter(addOrRemoveMemberAdapter);
+        recycler_view.setAdapter(dailyCostAdapter);
+
+        edtAmount = findViewById(R.id.edtAmount);
+
+        btnAdd = findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String amount = edtAmount.getText().toString();
+
+                if(amount!=null && amount.length()<1){
+
+                    return;
+
+                }
+
+                depositAmountToServer(amount);
+
+            }
+        });
+
+
+
+
+
+
 
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-
-        getUserList();
-
-
-
-    }
-
-    AddOrRemoveMemberAdapter.onSelectedPlaceListener m_onlistner = new AddOrRemoveMemberAdapter.onSelectedPlaceListener() {
+    DailyCostAdapter.onSelectedPlaceListener m_onlistner = new DailyCostAdapter.onSelectedPlaceListener() {
         @Override
-        public void onClick(UserInfo place) {
+        public void onClick(DailyCost place) {
 
-            MemberAddOrJoinToServer(place);
+
 
 
         }
     };
 
-    private void MemberAddOrJoinToServer(final UserInfo userInfo) {
+
+    private void depositAmountToServer(String amount) {
+
+
+        showProgress(DailyCostActivity.this);
+
+        Calendar c = Calendar.getInstance();
+        String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
 
         try {
-            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-
 
             JSONObject params = new JSONObject();
 
-
             try {
-                params.put("id", userInfo.getId());
+                params.put("user_id", PreferenceConnector.getID(DailyCostActivity.this));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             try {
-                params.put("mess_name", userInfo.getMess_name());
+                params.put("cost", amount);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             try {
-                params.put("manager", userInfo.getManager());
+                params.put("date", DateUtil.GetFormatedDateString(new Date()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
-            if(isAddmember==1){
-
-                try {
-                    params.put("approve", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }else{
-
-                try {
-                    params.put("approve", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
+            try {
+                params.put("yr_month", yearMonth);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
 
 
             final String requestBody = params.toString();
 
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.updateUserInfoModel, params, new Response.Listener<JSONObject>() {
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Constant.createDailyCost, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
 
@@ -152,168 +165,24 @@ public class AddOrRemoveMember extends AppCompatActivity {
 
                             try {
 
-                                if (response.getString("success").equals("1")) {
+                                IDailyCostDao iUserDao = new DailyCostDao(
+                                        DailyCostActivity.this);
 
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-
-                                            ArrayList<UserInfo>tempuserinfo = addOrRemoveMemberAdapter.getData();
-
-                                            if(tempuserinfo!=null && tempuserinfo.size()>0){
-                                                for (int i = 0;i <tempuserinfo.size();i++){
-
-                                                    if(tempuserinfo.get(i).getId()== userInfo.getId()){
-                                                        tempuserinfo.remove(i);
-                                                        break;
-                                                    }
-                                                }
-
-                                                addOrRemoveMemberAdapter.setData(tempuserinfo);
-                                                addOrRemoveMemberAdapter.notifyDataSetChanged();
-
-
-
-                                            }
-
-
-
-                                        }
-                                    });
-
-
-
-
-                                } else {
-
-
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-
-                            }
-
-                        }
-                    }).start();
-
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("LOG_VOLLEY", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-//                @Override
-//                public byte[] getBody() {
-//                    try {
-//                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                    } catch (UnsupportedEncodingException uee) {
-//                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-//                        return null;
-//                    }
-//                }
-
-                @Override
-                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                    return super.parseNetworkResponse(response);
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            MyApplication.getInstance().getRequestQueue().getCache().clear();
-            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
-        } catch (Exception e) {
-            e.getMessage();
-
-        }
-
-    }
-
-
-
-
-
-
-
-
-    private void getUserList() {
-
-        showProgress(AddOrRemoveMember.this);
-
-        try {
-            // RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-
-
-            JSONObject params = new JSONObject();
-
-            if(isAddmember==1){
-
-                try {
-                    params.put("approve", 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }else {
-
-                try {
-                    params.put("approve", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            try {
-                params.put("mess_name", PreferenceConnector.getMessname(AddOrRemoveMember.this));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-
-            final String requestBody = params.toString();
-
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.getAllUserApproveStatus, params, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(final JSONObject response) {
-
-                    Log.i("LOG_VOLLEY", response.toString());
-
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-
-                            try {
-
-                                IUserInfoDao iUserDao = new UserInfoDao(
-                                        AddOrRemoveMember.this);
-
-                                final ArrayList<UserInfo> userinfoArrayList;
+                                ArrayList<DailyCost> userinfoArrayList;
 
                                 userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
 
                                 if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
 
-
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            addOrRemoveMemberAdapter.setData(userinfoArrayList);
-                                            addOrRemoveMemberAdapter.notifyDataSetChanged();
+                                            edtAmount.setText("");
                                         }
                                     });
 
 
+                                    getAllCostByMonthAndUserID();
 
 
                                 } else {
@@ -329,7 +198,8 @@ public class AddOrRemoveMember extends AppCompatActivity {
                         }
                     }).start();
 
-                    dismissProgress(AddOrRemoveMember.this);
+
+                    dismissProgress(DailyCostActivity.this);
 
 
                 }
@@ -337,7 +207,7 @@ public class AddOrRemoveMember extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
-                    dismissProgress(AddOrRemoveMember.this);
+                    dismissProgress(DailyCostActivity.this);
                 }
             }) {
                 @Override
@@ -365,11 +235,159 @@ public class AddOrRemoveMember extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
-            dismissProgress(AddOrRemoveMember.this);
+            dismissProgress(DailyCostActivity.this);
 
         }
 
+
     }
+
+
+
+    private void getAllCostByMonthAndUserID() {
+
+
+        Calendar c = Calendar.getInstance();
+        String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+
+        try {
+
+            JSONObject params = new JSONObject();
+
+
+            try {
+                params.put("yr_month", yearMonth);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("user_id", PreferenceConnector.getID(DailyCostActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+            final String requestBody = params.toString();
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.getDailyCostByMonthAndUserID, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(final JSONObject response) {
+
+                    Log.i("LOG_VOLLEY", response.toString());
+
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            try {
+
+                                IDailyCostDao iUserDao = new DailyCostDao(
+                                        DailyCostActivity.this);
+
+                                final ArrayList<DailyCost> userinfoArrayList;
+
+                                userinfoArrayList = iUserDao.GetAppdataFromJSONObject(response);
+
+                                if (userinfoArrayList != null && userinfoArrayList.size() > 0) {
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+
+
+                                            dailyCostAdapter.setData(userinfoArrayList);
+                                            dailyCostAdapter.notifyDataSetChanged();
+
+
+
+
+
+
+
+                                        }
+                                    });
+
+
+                                } else {
+
+
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                            }
+
+                        }
+                    }).start();
+
+                    dismissProgress(DailyCostActivity.this);
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                    dismissProgress(DailyCostActivity.this);
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+//
+
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    return super.parseNetworkResponse(response);
+                }
+            };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            MyApplication.getInstance().getRequestQueue().getCache().clear();
+            MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
+        } catch (Exception e) {
+            e.getMessage();
+            dismissProgress(DailyCostActivity.this);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(DailyCostActivity.this);
+    }
+
 
     void showProgress(final Context context) {
 
@@ -418,20 +436,14 @@ public class AddOrRemoveMember extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-        }
-        return (super.onOptionsItemSelected(menuItem));
-    }
+    protected void onResume() {
+        super.onResume();
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //Bungee.swipeRight(LatestCueCard.this);
-        Animatoo.animateSwipeRight(AddOrRemoveMember.this);
-    }
 
+            getAllCostByMonthAndUserID();
+
+
+
+    }
 
 }

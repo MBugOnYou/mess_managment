@@ -18,6 +18,9 @@ public class Constant {
     public static  String getTotalMealByMonth = baseUrl+"getTotalMealByMonth";
     public static  String getAllMessList = baseUrl+"getAllMessList";
 
+    public static  String createDailyCost = baseUrl+"createDailyCost";
+    public static  String getDailyCostByMonthAndUserID = baseUrl+"getDailyCostByMonthAndUserID";
+
 
 
 

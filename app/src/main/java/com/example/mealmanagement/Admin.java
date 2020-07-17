@@ -39,7 +39,7 @@ import java.util.Date;
 
 public class Admin extends AppCompatActivity {
     KProgressHUD hud;
-    LinearLayout lnRemoveMember,lnAddMember,linDepositAmount,linTotalMeal,linPreviousMonth;
+    LinearLayout lnRemoveMember,lnAddMember,linDepositAmount,linTotalMeal,linPreviousMonth,linDailyCost;
 
     TextView totalMeal;
 
@@ -50,6 +50,23 @@ public class Admin extends AppCompatActivity {
         getSupportActionBar().setTitle("Admin Panel");
 
         totalMeal = findViewById(R.id.totalMeal);
+
+
+        linDailyCost = findViewById(R.id.linDailyCost);
+        linDailyCost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent = new Intent(Admin.this,DailyCostActivity.class);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(Admin.this);
+
+
+
+
+            }
+        });
 
 
 

@@ -46,12 +46,23 @@ public class DailyCostDao implements IDailyCostDao {
                             appData.setId(jsonObject.getInt("id"));
                         } catch (Exception ex) {
                         }
+
+                        try {
+                            appData.setUser_id(jsonObject.getInt("user_id"));
+                        } catch (Exception ex) {
+                        }
+
                         try {
                             appData.setDate(jsonObject.getString("date"));
                         } catch (Exception ex) {
                         }
                         try {
                             appData.setCost(jsonObject.getInt("cost"));
+                        } catch (Exception ex) {
+                        }
+
+                        try {
+                            appData.setYr_month(jsonObject.getString("yr_month"));
                         } catch (Exception ex) {
                         }
 

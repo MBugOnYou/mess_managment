@@ -50,6 +50,15 @@ public class PreferenceConnector {
     }
 
 
+    public static String getMessname(Context context) {
+
+
+        String mess_name = readString(context, "mess_name", "");
+
+
+        return mess_name;
+    }
+
 
     public static int getmanager(Context context) {
 
