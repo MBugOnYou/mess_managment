@@ -21,6 +21,8 @@ public class Constant {
     public static  String createDailyCost = baseUrl+"createDailyCost";
     public static  String getDailyCostByMonthAndUserID = baseUrl+"getDailyCostByMonthAndUserID";
 
+    public static  String getTotalDailyCostByMonth = baseUrl+"getTotalDailyCostByMonth";
+
 
 
 

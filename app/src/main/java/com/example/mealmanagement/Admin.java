@@ -107,6 +107,9 @@ public class Admin extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                startActivity(new Intent(Admin.this,PreviousMonthActivity.class));
+
+
 
             }
         });
