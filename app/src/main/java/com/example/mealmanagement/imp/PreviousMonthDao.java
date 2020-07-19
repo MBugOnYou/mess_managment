@@ -52,7 +52,7 @@ public class PreviousMonthDao implements IPreviousMonthDao {
                         } catch (Exception ex) {
                         }
                         try {
-                            appData.setMeal_rate(jsonObject.getInt("meal_rate"));
+                            appData.setMeal_rate(jsonObject.getString("meal_rate"));
                         } catch (Exception ex) {
                         }
 

@@ -4,6 +4,7 @@ package com.example.mealmanagement.dao;
 import com.example.mealmanagement.model.DailyMeal;
 import com.example.mealmanagement.model.UserInfo;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public interface IDailyMealDao {
 
     ArrayList<DailyMeal> GetAppdataFromJSONObject(JSONObject json) throws Exception;
+    ArrayList<DailyMeal> GetAppdataFromJSONArray(JSONArray json) throws Exception;
 
 
 

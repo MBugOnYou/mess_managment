@@ -2,30 +2,32 @@ package com.example.mealmanagement.model;
 
 public class PreviousMonth {
 
-    long id;
+    int id;
     int user_id;
-    int meal_rate;
+    String meal_rate;
     int total_deposit;
     int total_cost;
     int extra_money;
     int given_money;
+    String yr_month;
 
 
     public PreviousMonth() {
         this.id = 0;
         this.user_id = 0;
-        this.meal_rate = 0;
+        this.meal_rate = "";
         this.total_deposit = 0;
         this.total_cost = 0;
         this.extra_money = 0;
         this.given_money = 0;
+        this.yr_month = "";
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -37,11 +39,11 @@ public class PreviousMonth {
         this.user_id = user_id;
     }
 
-    public int getMeal_rate() {
+    public String getMeal_rate() {
         return meal_rate;
     }
 
-    public void setMeal_rate(int meal_rate) {
+    public void setMeal_rate(String meal_rate) {
         this.meal_rate = meal_rate;
     }
 
@@ -76,4 +78,13 @@ public class PreviousMonth {
     public void setGiven_money(int given_money) {
         this.given_money = given_money;
     }
+
+    public String getYr_month() {
+        return yr_month;
+    }
+
+    public void setYr_month(String yr_month) {
+        this.yr_month = yr_month;
+    }
 }
+

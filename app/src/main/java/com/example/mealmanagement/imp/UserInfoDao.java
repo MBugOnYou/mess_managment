@@ -88,5 +88,68 @@ public class UserInfoDao implements IUserInfoDao {
         return AppDataArrayList;
     }
 
+    @Override
+    public ArrayList<UserInfo> GetAppdataFromJSONArray(JSONArray json) throws Exception {
+
+        ArrayList<UserInfo> AppDataArrayList = new ArrayList<>();
+        //JSONArray jsonArray = null;
+        UserInfo appData = null;
+        JSONObject jsonObject = null;
+        try {
+
+
+            if (json != null && !json.equals("")) {
+
+                for (int k = 0; k < json.length(); k++) {
+
+                    jsonObject = json.getJSONObject(k);
+                    appData = new UserInfo();
+
+
+                    try {
+                        appData.setId(jsonObject.getInt("id"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setName(jsonObject.getString("name"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setMail(jsonObject.getString("mail"));
+                    } catch (Exception ex) {
+                    }
+
+                    try {
+                        appData.setPassword(jsonObject.getString("password"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setMess_name(jsonObject.getString("mess_name"));
+                    } catch (Exception ex) {
+                    }
+
+                    try {
+                        appData.setManager(jsonObject.getInt("manager"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setApprove(jsonObject.getInt("approve"));
+                    } catch (Exception ex) {
+                    }
+
+
+
+                    AppDataArrayList.add(appData);
+                }
+            }
+
+
+
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+
+        return AppDataArrayList;
+    }
 
 }

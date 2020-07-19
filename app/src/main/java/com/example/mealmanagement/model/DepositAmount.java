@@ -2,7 +2,7 @@ package com.example.mealmanagement.model;
 
 public class DepositAmount {
 
-    long id;
+    int id;
     int user_id;
     int amount;
     String creation_date;
@@ -22,11 +22,11 @@ public class DepositAmount {
 
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

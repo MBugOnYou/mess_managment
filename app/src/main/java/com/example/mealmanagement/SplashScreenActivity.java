@@ -21,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
 
 
-                long userid = PreferenceConnector.getID(SplashScreenActivity.this);
+                int userid = PreferenceConnector.getID(SplashScreenActivity.this);
                 int manager = PreferenceConnector.getmanager(SplashScreenActivity.this);
                 int approve = PreferenceConnector.getapprove(SplashScreenActivity.this);
                 if(userid==0){

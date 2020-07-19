@@ -43,7 +43,7 @@ import java.util.Date;
 public class User extends AppCompatActivity {
 
     KProgressHUD hud;
-    LinearLayout linDepositAmount,lintotalmeal;
+    LinearLayout linDepositAmount,lintotalmeal,linPreviousMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,20 @@ public class User extends AppCompatActivity {
         setContentView(R.layout.activity_user);
 
         getSupportActionBar().setTitle("User Panel");
+
+
+        linPreviousMonth =findViewById(R.id.linPreviousMonth);
+        linPreviousMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(User.this,PreviousMonthActivity.class);
+                intent.putExtra("isFromAdmin",0);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(User.this);
+            }
+        });
+
+
 
         linDepositAmount =findViewById(R.id.linDepositAmount);
         linDepositAmount.setOnClickListener(new View.OnClickListener() {

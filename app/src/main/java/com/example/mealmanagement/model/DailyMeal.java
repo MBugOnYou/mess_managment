@@ -2,7 +2,7 @@ package com.example.mealmanagement.model;
 
 public class DailyMeal {
 
-    long id;
+    int id;
     int user_id;
     int breakfast;
     int lunch;
@@ -41,11 +41,11 @@ public class DailyMeal {
         this.total_meal = total_meal;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

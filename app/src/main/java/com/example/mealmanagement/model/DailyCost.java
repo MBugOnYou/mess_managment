@@ -2,7 +2,7 @@ package com.example.mealmanagement.model;
 
 public class DailyCost {
 
-    long id;
+    int id;
     int cost;
     String date;
     int user_id;
@@ -18,11 +18,11 @@ public class DailyCost {
     }
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

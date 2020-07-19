@@ -86,5 +86,63 @@ public class DepositAmountDao implements IDepositAmount {
         return AppDataArrayList;
     }
 
+    @Override
+    public ArrayList<DepositAmount> GetAppdataFromJSONArray(JSONArray json) throws Exception {
+
+        ArrayList<DepositAmount> AppDataArrayList = new ArrayList<>();
+        //JSONArray jsonArray = null;
+        DepositAmount appData = null;
+        JSONObject jsonObject = null;
+        try {
+
+            if (json != null && !json.equals("")) {
+
+                for (int k = 0; k < json.length(); k++) {
+
+                    jsonObject = json.getJSONObject(k);
+                    appData = new DepositAmount();
+
+
+                    try {
+                        appData.setId(jsonObject.getInt("id"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setUser_id(jsonObject.getInt("user_id"));
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        appData.setAmount(jsonObject.getInt("amount"));
+                    } catch (Exception ex) {
+                    }
+
+                    try {
+                        appData.setCreation_date(jsonObject.getString("creation_date"));
+                    } catch (Exception ex) {
+                    }
+
+                    try {
+                        appData.setYr_month(jsonObject.getString("yr_month"));
+                    } catch (Exception ex) {
+                    }
+
+                    try {
+                        appData.setName(jsonObject.getString("name"));
+                    } catch (Exception ex) {
+                    }
+
+
+                    AppDataArrayList.add(appData);
+                }
+            }
+
+
+
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+
+        return AppDataArrayList;
+    }
 
 }

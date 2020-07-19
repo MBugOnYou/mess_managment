@@ -21,11 +21,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.mealmanagement.constant.Constant;
 import com.example.mealmanagement.dao.IDailyMealDao;
-import com.example.mealmanagement.dao.IDepositAmount;
 import com.example.mealmanagement.imp.DailyMealDao;
-import com.example.mealmanagement.imp.DepositAmountDao;
 import com.example.mealmanagement.model.DailyMeal;
-import com.example.mealmanagement.model.DepositAmount;
 import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -39,7 +36,7 @@ import java.util.Date;
 
 public class Admin extends AppCompatActivity {
     KProgressHUD hud;
-    LinearLayout lnRemoveMember,lnAddMember,linDepositAmount,linTotalMeal,linPreviousMonth,linDailyCost;
+    LinearLayout lnRemoveMember,lnAddMember,linDepositAmount,linTotalMeal,linPreviousMonth,linDailyCost,linCalculateMealRate;
 
     TextView totalMeal;
 
@@ -106,8 +103,30 @@ public class Admin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(Admin.this,PreviousMonthActivity.class);
+                intent.putExtra("isFromAdmin",1);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(Admin.this);
 
-                startActivity(new Intent(Admin.this,PreviousMonthActivity.class));
+
+
+
+
+            }
+        });
+
+
+
+
+
+        linCalculateMealRate = findViewById(R.id.linCalculateMealRate);
+        linCalculateMealRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                startActivity(new Intent(Admin.this, CalculateMealRateActivity.class));
+                Animatoo.animateSwipeLeft(Admin.this);
 
 
 

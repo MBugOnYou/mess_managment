@@ -3,6 +3,7 @@ package com.example.mealmanagement.dao;
 
 import com.example.mealmanagement.model.UserInfo;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public interface IUserInfoDao {
 
     ArrayList<UserInfo> GetAppdataFromJSONObject(JSONObject json) throws Exception;
+    ArrayList<UserInfo> GetAppdataFromJSONArray(JSONArray json) throws Exception;
 
 
 

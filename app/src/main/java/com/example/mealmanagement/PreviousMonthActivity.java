@@ -1,13 +1,12 @@
 package com.example.mealmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,11 +16,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.example.mealmanagement.adapter.CalculateMillRateAdapter;
 import com.example.mealmanagement.constant.Constant;
-import com.example.mealmanagement.dao.IDepositAmount;
-import com.example.mealmanagement.imp.DepositAmountDao;
+import com.example.mealmanagement.dao.IPreviousMonthDao;
+import com.example.mealmanagement.imp.PreviousMonthDao;
+import com.example.mealmanagement.model.DailyMeal;
 import com.example.mealmanagement.model.DepositAmount;
+import com.example.mealmanagement.model.PreviousMonth;
+import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -35,53 +37,71 @@ import java.util.Date;
 
 public class PreviousMonthActivity extends AppCompatActivity {
 
-    TextView txtMonthName,txtTotalCost,txtMillRate;
-    Button btnCalculate;
+
+
     RecyclerView recycler_view;
     KProgressHUD hud;
+    ArrayList<PreviousMonth>previousMonthArrayList;
+    CalculateMillRateAdapter calculateMillRateAdapter;
+    LinearLayoutManager mLayoutManager;
+    int isFromAdmin = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_previous_month);
-
-        txtMonthName = findViewById(R.id.txtMonthName);
-        txtTotalCost = findViewById(R.id.txtTotalCost);
-        txtMillRate = findViewById(R.id.txtMillRate);
-        btnCalculate = findViewById(R.id.btnCalculate);
-        btnCalculate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        setContentView(R.layout.activity_previous_month2);
 
 
+        isFromAdmin = getIntent().getIntExtra("isFromAdmin",0);
 
-            }
-        });
+        previousMonthArrayList = new ArrayList<>();
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        calculateMillRateAdapter = new CalculateMillRateAdapter(previousMonthArrayList, PreviousMonthActivity.this, m_onlistner);
+        mLayoutManager = new LinearLayoutManager(PreviousMonthActivity.this);
+        recycler_view.setLayoutManager(mLayoutManager);
+        recycler_view.setItemAnimator(new DefaultItemAnimator());
+        recycler_view.setAdapter(calculateMillRateAdapter);
 
-        recycler_view = findViewById(R.id.recycler_view);
 
 
     }
+
+
+    CalculateMillRateAdapter.onSelectedPlaceListener m_onlistner = new CalculateMillRateAdapter.onSelectedPlaceListener() {
+        @Override
+        public void onClick(PreviousMonth place) {
+
+
+
+
+        }
+    };
 
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        getTotalDailyCostByMonth();
-
+        getAllPreviousMontdataFromServer();
     }
 
+    private void getAllPreviousMontdataFromServer() {
 
 
+        // showProgress(PreviousMonthActivity.this);
 
-    private void getTotalDailyCostByMonth() {
-
-
-        showProgress(PreviousMonthActivity.this);
+        String url = "";
 
         Calendar c = Calendar.getInstance();
-        final String yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+
+         String yearMonth = "";
+
+
+            c.add(Calendar.MONTH, -1);
+            yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+
+
 
         try {
 
@@ -94,42 +114,61 @@ public class PreviousMonthActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            if(isFromAdmin==0){
+                url = Constant.getPreviousMonthByUserID;
+                try {
+                    params.put("user_id", PreferenceConnector.getID(PreviousMonthActivity.this));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
+            }else{
+                url = Constant.getPreviousMonthByMonth;
+            }
 
             final String requestBody = params.toString();
 
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Constant.getTotalDailyCostByMonth, params, new Response.Listener<JSONObject>() {
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
 
                     Log.i("LOG_VOLLEY", response.toString());
 
 
-                    try {
-                        final int  totalCost = Integer.parseInt(response.getString("totalCost"));
-                        final int  totalMeal = Integer.parseInt(response.getString("totalmeal"));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            IPreviousMonthDao previousMonthDao = new PreviousMonthDao(PreviousMonthActivity.this);
+                            try {
+                                final ArrayList<PreviousMonth> previousMonths = previousMonthDao.GetAppdataFromJSONObject(response);
 
-                                txtTotalCost.setText("TotalCost: "+totalCost+"");
-                                txtMonthName.setText("Month: "+yearMonth+"");
-                                double millrate = totalCost/totalMeal;
-                                txtMillRate.setText("Mill Rate: "+millrate+"");
+                                if(previousMonths!=null && previousMonths.size()>0){
 
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            calculateMillRateAdapter.setData(previousMonths);
+                                            calculateMillRateAdapter.notifyDataSetChanged();
+
+                                        }
+                                    });
+                                }
+
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
+
+                        }
+                    }).start();
 
 
 
 
-
-
-                    dismissProgress(PreviousMonthActivity.this);
+                    //dismissProgress(PreviousMonthActivity.this);
 
 
                 }
@@ -137,7 +176,8 @@ public class PreviousMonthActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
-                    dismissProgress(PreviousMonthActivity.this);
+                    //dismissProgress(PreviousMonthActivity.this);
+
                 }
             }) {
                 @Override
@@ -157,75 +197,20 @@ public class PreviousMonthActivity extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
-            dismissProgress(PreviousMonthActivity.this);
-
-        }
-
-
-
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-        }
-        return (super.onOptionsItemSelected(menuItem));
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //Bungee.swipeRight(LatestCueCard.this);
-        Animatoo.animateSwipeRight(PreviousMonthActivity.this);
-    }
-
-
-    void showProgress(final Context context) {
-
-
-        try {
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    hud = KProgressHUD.create(context)
-                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                            .setLabel("Please wait")
-                            .setCancellable(true)
-                            .setAnimationSpeed(2)
-                            .setDimAmount(0.5f)
-                            .show();
-                }
-            });
-
-        } catch (Exception e) {
+            //dismissProgress(PreviousMonthActivity.this);
 
 
         }
 
+
+
+
+
+
+
+
+
+
+
     }
-
-    void dismissProgress(Context context) {
-
-
-        try {
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    if (hud != null && hud.isShowing()) {
-                        hud.dismiss();
-                        hud = null;
-                    }
-                }
-            });
-
-        } catch (Exception e) {
-            e.getMessage();
-
-        }
-    }
-
 }

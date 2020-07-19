@@ -23,6 +23,11 @@ public class Constant {
 
     public static  String getTotalDailyCostByMonth = baseUrl+"getTotalDailyCostByMonth";
 
+    public static  String createPreviousMonth = baseUrl+"createPreviousMonth";
+    public static  String getPreviousMonthByMonth = baseUrl+"getPreviousMonthByMonth";
+
+    public static  String getPreviousMonthByUserID = baseUrl+"getPreviousMonthByUserID";
+
 
 
 

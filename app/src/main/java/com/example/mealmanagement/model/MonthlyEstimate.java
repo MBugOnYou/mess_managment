@@ -1,7 +1,7 @@
 package com.example.mealmanagement.model;
 
 public class MonthlyEstimate {
-    long id;
+    int id;
     int user_id;
     String date;
     int meal;
@@ -16,11 +16,11 @@ public class MonthlyEstimate {
         this.deposita = 0;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

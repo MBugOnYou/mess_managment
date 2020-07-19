@@ -11,7 +11,7 @@ public class PreferenceConnector {
     public static final int MODE = Context.MODE_PRIVATE;
 
 
-    private long Id;
+    private int Id;
     private String status;
     private String creationDate;
     private String name;
@@ -28,7 +28,7 @@ public class PreferenceConnector {
 
     public static void saveUser(Context context, UserInfo userInfo) {
 
-        writeLong(context, "id", userInfo.getId());
+        writeInteger(context, "id", userInfo.getId());
         writeString(context, "name", userInfo.getName());
         writeString(context, "mail", userInfo.getMail());
         writeString(context, "password", userInfo.getPassword());
@@ -40,7 +40,7 @@ public class PreferenceConnector {
 
     public static void LogoutsaveUser(Context context) {
 
-        writeLong(context, "id", 0);
+        writeInteger(context, "id", 0);
         writeString(context, "name", "");
         writeString(context, "mail", "");
         writeString(context, "password", "");
@@ -107,7 +107,7 @@ public class PreferenceConnector {
 
         UserInfo userInfo1 = new UserInfo();
 
-        userInfo1.setId(readLong(context, "id", 0));
+        userInfo1.setId(readInteger(context, "id", 0));
         userInfo1.setName(readString(context, "name", ""));
         userInfo1.setMail(readString(context, "mail", ""));
         userInfo1.setName(readString(context, "name", ""));
@@ -177,10 +177,10 @@ public class PreferenceConnector {
     }
 
 
-    public static long getID(Context context) {
+    public static int getID(Context context) {
 
 
-        long status = readLong(context, "id", 0);
+        int status = readInteger(context, "id", 0);
 
 
         return status;
