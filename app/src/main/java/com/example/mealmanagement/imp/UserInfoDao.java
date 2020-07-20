@@ -25,7 +25,7 @@ public class UserInfoDao implements IUserInfoDao {
     @Override
     public ArrayList<UserInfo> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<UserInfo> AppDataArrayList = new ArrayList<>();
+        ArrayList<UserInfo> userInfoArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         UserInfo appData = null;
         JSONObject jsonObject = null;
@@ -75,7 +75,7 @@ public class UserInfoDao implements IUserInfoDao {
 
 
 
-                        AppDataArrayList.add(appData);
+                        userInfoArrayList.add(appData);
                     }
                 }
 
@@ -85,13 +85,13 @@ public class UserInfoDao implements IUserInfoDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return userInfoArrayList;
     }
 
     @Override
     public ArrayList<UserInfo> GetAppdataFromJSONArray(JSONArray json) throws Exception {
 
-        ArrayList<UserInfo> AppDataArrayList = new ArrayList<>();
+        ArrayList<UserInfo> userInfoArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         UserInfo appData = null;
         JSONObject jsonObject = null;
@@ -139,7 +139,7 @@ public class UserInfoDao implements IUserInfoDao {
 
 
 
-                    AppDataArrayList.add(appData);
+                    userInfoArrayList.add(appData);
                 }
             }
 
@@ -149,7 +149,7 @@ public class UserInfoDao implements IUserInfoDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return userInfoArrayList;
     }
 
 }

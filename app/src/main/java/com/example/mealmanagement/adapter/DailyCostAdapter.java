@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class DailyCostAdapter extends RecyclerView.Adapter<DailyCostAdapter.MyViewHolder> {
 
-    private ArrayList<DailyCost> placelist;
+    private ArrayList<DailyCost> dailyCostArrayList;
     private onSelectedPlaceListener m_onSelectedPlaceListener;
     Context context;
     String YoutubeAPiKey;
@@ -37,8 +37,8 @@ public class DailyCostAdapter extends RecyclerView.Adapter<DailyCostAdapter.MyVi
     }
 
 
-    public DailyCostAdapter(ArrayList<DailyCost> placelist, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
-        this.placelist = placelist;
+    public DailyCostAdapter(ArrayList<DailyCost> dailyCostArrayList, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
+        this.dailyCostArrayList = dailyCostArrayList;
         this.context = context;
         this.m_onSelectedPlaceListener = m_onSelectedPlaceListener;
 
@@ -55,26 +55,26 @@ public class DailyCostAdapter extends RecyclerView.Adapter<DailyCostAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final DailyCost place = placelist.get(position);
+        final DailyCost dailyCost = dailyCostArrayList.get(position);
 
-        holder.txtamount.setText(place.getCost()+"");
-        holder.txtdate.setText(place.getDate()+"");
+        holder.txtamount.setText(dailyCost.getCost()+"");
+        holder.txtdate.setText(dailyCost.getDate()+"");
 
 
 
     }
 
     public void setData(ArrayList<DailyCost> lst) {
-        this.placelist = lst;
+        this.dailyCostArrayList = lst;
     }
 
     @Override
     public int getItemCount() {
-        return placelist.size();
+        return dailyCostArrayList.size();
     }
 
     public ArrayList<DailyCost> getData() {
-        return this.placelist;
+        return this.dailyCostArrayList;
     }
 
 

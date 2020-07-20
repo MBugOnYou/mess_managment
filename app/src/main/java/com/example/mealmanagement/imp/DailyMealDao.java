@@ -25,7 +25,7 @@ public class DailyMealDao implements IDailyMealDao {
     @Override
     public ArrayList<DailyMeal> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<DailyMeal> AppDataArrayList = new ArrayList<>();
+        ArrayList<DailyMeal> dailyMealArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         DailyMeal appData = null;
         JSONObject jsonObject = null;
@@ -87,7 +87,7 @@ public class DailyMealDao implements IDailyMealDao {
                         }
 
 
-                        AppDataArrayList.add(appData);
+                        dailyMealArrayList.add(appData);
                     }
                 }
 
@@ -97,14 +97,14 @@ public class DailyMealDao implements IDailyMealDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return dailyMealArrayList;
     }
 
 
     @Override
     public ArrayList<DailyMeal> GetAppdataFromJSONArray(JSONArray json) throws Exception {
 
-        ArrayList<DailyMeal> AppDataArrayList = new ArrayList<>();
+        ArrayList<DailyMeal> dailyMealArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         DailyMeal appData = null;
         JSONObject jsonObject = null;
@@ -164,7 +164,7 @@ public class DailyMealDao implements IDailyMealDao {
                     }
 
 
-                    AppDataArrayList.add(appData);
+                    dailyMealArrayList.add(appData);
                 }
             }
 
@@ -174,7 +174,7 @@ public class DailyMealDao implements IDailyMealDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return dailyMealArrayList;
     }
 
 }

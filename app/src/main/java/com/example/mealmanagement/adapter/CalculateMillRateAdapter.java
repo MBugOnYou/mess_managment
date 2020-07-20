@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class CalculateMillRateAdapter extends RecyclerView.Adapter<CalculateMillRateAdapter.MyViewHolder> {
 
-    private ArrayList<PreviousMonth> placelist;
+    private ArrayList<PreviousMonth> previousMonthArrayList;
     private onSelectedPlaceListener m_onSelectedPlaceListener;
     Context context;
     String YoutubeAPiKey;
@@ -41,8 +41,8 @@ public class CalculateMillRateAdapter extends RecyclerView.Adapter<CalculateMill
     }
 
 
-    public CalculateMillRateAdapter(ArrayList<PreviousMonth> placelist, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
-        this.placelist = placelist;
+    public CalculateMillRateAdapter(ArrayList<PreviousMonth> previousMonthArrayList, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
+        this.previousMonthArrayList = previousMonthArrayList;
         this.context = context;
         this.m_onSelectedPlaceListener = m_onSelectedPlaceListener;
 
@@ -59,31 +59,31 @@ public class CalculateMillRateAdapter extends RecyclerView.Adapter<CalculateMill
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final PreviousMonth place = placelist.get(position);
+        final PreviousMonth previousMonth = previousMonthArrayList.get(position);
 
-        holder.txtname1.setText(place.getUser_id()+"");
-        holder.txtmealRate.setText(place.getMeal_rate()+"");
-        holder.txtDeposit.setText(place.getTotal_deposit()+"");
+        holder.txtname1.setText(previousMonth.getUser_id()+"");
+        holder.txtmealRate.setText(previousMonth.getMeal_rate()+"");
+        holder.txtDeposit.setText(previousMonth.getTotal_deposit()+"");
 
-        holder.txtCost.setText(place.getTotal_cost()+"");
-        holder.txtExtra.setText(place.getExtra_money()+"");
-        holder.txtGiven.setText(place.getGiven_money()+"");
+        holder.txtCost.setText(previousMonth.getTotal_cost()+"");
+        holder.txtExtra.setText(previousMonth.getExtra_money()+"");
+        holder.txtGiven.setText(previousMonth.getGiven_money()+"");
 
 
 
     }
 
     public void setData(ArrayList<PreviousMonth> lst) {
-        this.placelist = lst;
+        this.previousMonthArrayList = lst;
     }
 
     @Override
     public int getItemCount() {
-        return placelist.size();
+        return previousMonthArrayList.size();
     }
 
     public ArrayList<PreviousMonth> getData() {
-        return this.placelist;
+        return this.previousMonthArrayList;
     }
 
 

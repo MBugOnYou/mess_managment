@@ -27,7 +27,7 @@ public class DepositAmountDao implements IDepositAmount {
     @Override
     public ArrayList<DepositAmount> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<DepositAmount> AppDataArrayList = new ArrayList<>();
+        ArrayList<DepositAmount> depositAmountArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         DepositAmount appData = null;
         JSONObject jsonObject = null;
@@ -73,7 +73,7 @@ public class DepositAmountDao implements IDepositAmount {
                         }
 
 
-                        AppDataArrayList.add(appData);
+                        depositAmountArrayList.add(appData);
                     }
                 }
 
@@ -83,13 +83,13 @@ public class DepositAmountDao implements IDepositAmount {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return depositAmountArrayList;
     }
 
     @Override
     public ArrayList<DepositAmount> GetAppdataFromJSONArray(JSONArray json) throws Exception {
 
-        ArrayList<DepositAmount> AppDataArrayList = new ArrayList<>();
+        ArrayList<DepositAmount> depositAmountArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         DepositAmount appData = null;
         JSONObject jsonObject = null;
@@ -132,7 +132,7 @@ public class DepositAmountDao implements IDepositAmount {
                     }
 
 
-                    AppDataArrayList.add(appData);
+                    depositAmountArrayList.add(appData);
                 }
             }
 
@@ -142,7 +142,7 @@ public class DepositAmountDao implements IDepositAmount {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return depositAmountArrayList;
     }
 
 }

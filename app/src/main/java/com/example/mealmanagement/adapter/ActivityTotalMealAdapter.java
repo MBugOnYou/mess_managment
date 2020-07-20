@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class ActivityTotalMealAdapter extends RecyclerView.Adapter<ActivityTotalMealAdapter.MyViewHolder> {
 
-    private ArrayList<DailyMeal> placelist;
+    private ArrayList<DailyMeal> dailyMealArrayList;
     private onSelectedPlaceListener m_onSelectedPlaceListener;
     Context context;
     String YoutubeAPiKey;
@@ -37,8 +37,8 @@ public class ActivityTotalMealAdapter extends RecyclerView.Adapter<ActivityTotal
     }
 
 
-    public ActivityTotalMealAdapter(ArrayList<DailyMeal> placelist, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
-        this.placelist = placelist;
+    public ActivityTotalMealAdapter(ArrayList<DailyMeal> dailyMealArrayList, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
+        this.dailyMealArrayList = dailyMealArrayList;
         this.context = context;
         this.m_onSelectedPlaceListener = m_onSelectedPlaceListener;
 
@@ -55,26 +55,26 @@ public class ActivityTotalMealAdapter extends RecyclerView.Adapter<ActivityTotal
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final DailyMeal place = placelist.get(position);
+        final DailyMeal dailyMeal = dailyMealArrayList.get(position);
 
-        holder.txtCreationDate.setText(place.getCreation_date()+"");
-        holder.txttotalmeal.setText(place.getTotal_meal()+"");
-        holder.txtname.setText(place.getName()+"");
+        holder.txtCreationDate.setText(dailyMeal.getCreation_date()+"");
+        holder.txttotalmeal.setText(dailyMeal.getTotal_meal()+"");
+        holder.txtname.setText(dailyMeal.getName()+"");
 
 
     }
 
     public void setData(ArrayList<DailyMeal> lst) {
-        this.placelist = lst;
+        this.dailyMealArrayList = lst;
     }
 
     @Override
     public int getItemCount() {
-        return placelist.size();
+        return dailyMealArrayList.size();
     }
 
     public ArrayList<DailyMeal> getData() {
-        return this.placelist;
+        return this.dailyMealArrayList;
     }
 
 

@@ -25,7 +25,7 @@ public class DailyCostDao implements IDailyCostDao {
     @Override
     public ArrayList<DailyCost> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<DailyCost> AppDataArrayList = new ArrayList<>();
+        ArrayList<DailyCost> dailyCostArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         DailyCost appData = null;
         JSONObject jsonObject = null;
@@ -67,7 +67,7 @@ public class DailyCostDao implements IDailyCostDao {
                         }
 
 
-                        AppDataArrayList.add(appData);
+                        dailyCostArrayList.add(appData);
                     }
                 }
 
@@ -77,7 +77,7 @@ public class DailyCostDao implements IDailyCostDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return dailyCostArrayList;
     }
 
 

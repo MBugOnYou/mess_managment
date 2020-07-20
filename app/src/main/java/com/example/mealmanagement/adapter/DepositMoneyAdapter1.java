@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DepositMoneyAdapter1 extends RecyclerView.Adapter<DepositMoneyAdapter1.MyViewHolder> {
 
-    private ArrayList<DepositAmount> placelist;
+    private ArrayList<DepositAmount> depositAmountArrayList;
     private onSelectedPlaceListener m_onSelectedPlaceListener;
     Context context;
     String YoutubeAPiKey;
@@ -38,8 +38,8 @@ public class DepositMoneyAdapter1 extends RecyclerView.Adapter<DepositMoneyAdapt
     }
 
 
-    public DepositMoneyAdapter1( ArrayList<DepositAmount> placelist, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
-        this.placelist = placelist;
+    public DepositMoneyAdapter1( ArrayList<DepositAmount> depositAmountArrayList, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
+        this.depositAmountArrayList = depositAmountArrayList;
         this.context = context;
         this.m_onSelectedPlaceListener = m_onSelectedPlaceListener;
 
@@ -56,27 +56,27 @@ public class DepositMoneyAdapter1 extends RecyclerView.Adapter<DepositMoneyAdapt
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final DepositAmount place = placelist.get(position);
+        final DepositAmount depositAmount = depositAmountArrayList.get(position);
 
-        holder.txtname1.setText(place.getName()+"");
-        holder.txtamount.setText(place.getAmount()+"");
-        holder.txtdate.setText(place.getCreation_date()+"");
+        holder.txtname1.setText(depositAmount.getName()+"");
+        holder.txtamount.setText(depositAmount.getAmount()+"");
+        holder.txtdate.setText(depositAmount.getCreation_date()+"");
 
 
 
     }
 
     public void setData(ArrayList<DepositAmount> lst) {
-        this.placelist = lst;
+        this.depositAmountArrayList = lst;
     }
 
     @Override
     public int getItemCount() {
-        return placelist.size();
+        return depositAmountArrayList.size();
     }
 
     public ArrayList<DepositAmount> getData() {
-        return this.placelist;
+        return this.depositAmountArrayList;
     }
 
 

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class AddOrRemoveMemberAdapter extends RecyclerView.Adapter<AddOrRemoveMemberAdapter.MyViewHolder> {
 
-    private ArrayList<UserInfo> placelist;
+    private ArrayList<UserInfo> userInfoArrayList;
     private onSelectedPlaceListener m_onSelectedPlaceListener;
     Context context;
     String YoutubeAPiKey;
@@ -38,8 +38,8 @@ public class AddOrRemoveMemberAdapter extends RecyclerView.Adapter<AddOrRemoveMe
     }
 
 
-    public AddOrRemoveMemberAdapter(int isAddmember, ArrayList<UserInfo> placelist, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
-        this.placelist = placelist;
+    public AddOrRemoveMemberAdapter(int isAddmember, ArrayList<UserInfo> userInfoArrayList, Context context, onSelectedPlaceListener m_onSelectedPlaceListener) {
+        this.userInfoArrayList = userInfoArrayList;
         this.context = context;
         this.m_onSelectedPlaceListener = m_onSelectedPlaceListener;
         this.isAddmember=isAddmember;
@@ -56,11 +56,11 @@ public class AddOrRemoveMemberAdapter extends RecyclerView.Adapter<AddOrRemoveMe
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final UserInfo place = placelist.get(position);
+        final UserInfo userInfo = userInfoArrayList.get(position);
 
-        holder.txtname.setText(place.getName());
+        holder.txtname.setText(userInfo.getName());
        // holder.thum.setTag(place);
-        holder.txtname.setTag(place);
+        holder.txtname.setTag(userInfo);
 
         if(isAddmember==1){
             holder.btnaddOrRemove.setText("Add");
@@ -85,16 +85,16 @@ public class AddOrRemoveMemberAdapter extends RecyclerView.Adapter<AddOrRemoveMe
     }
 
     public void setData(ArrayList<UserInfo> lst) {
-        this.placelist = lst;
+        this.userInfoArrayList = lst;
     }
 
     @Override
     public int getItemCount() {
-        return placelist.size();
+        return userInfoArrayList.size();
     }
 
     public ArrayList<UserInfo> getData() {
-        return this.placelist;
+        return this.userInfoArrayList;
     }
 
 

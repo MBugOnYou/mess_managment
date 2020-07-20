@@ -25,7 +25,7 @@ public class MonthlyEstimateDao implements IMonthlyEstimateDao {
     @Override
     public ArrayList<MonthlyEstimate> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<MonthlyEstimate> AppDataArrayList = new ArrayList<>();
+        ArrayList<MonthlyEstimate> monthlyEstimateArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         MonthlyEstimate appData = null;
         JSONObject jsonObject = null;
@@ -66,7 +66,7 @@ public class MonthlyEstimateDao implements IMonthlyEstimateDao {
 
 
 
-                        AppDataArrayList.add(appData);
+                        monthlyEstimateArrayList.add(appData);
                     }
                 }
 
@@ -76,7 +76,7 @@ public class MonthlyEstimateDao implements IMonthlyEstimateDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return monthlyEstimateArrayList;
     }
 
 

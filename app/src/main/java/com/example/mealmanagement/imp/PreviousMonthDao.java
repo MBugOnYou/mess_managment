@@ -26,7 +26,7 @@ public class PreviousMonthDao implements IPreviousMonthDao {
     @Override
     public ArrayList<PreviousMonth> GetAppdataFromJSONObject(JSONObject json) throws Exception {
 
-        ArrayList<PreviousMonth> AppDataArrayList = new ArrayList<>();
+        ArrayList<PreviousMonth> previousMonthArrayList = new ArrayList<>();
         //JSONArray jsonArray = null;
         PreviousMonth appData = null;
         JSONObject jsonObject = null;
@@ -74,7 +74,7 @@ public class PreviousMonthDao implements IPreviousMonthDao {
                         } catch (Exception ex) {
                         }
 
-                        AppDataArrayList.add(appData);
+                        previousMonthArrayList.add(appData);
                     }
                 }
 
@@ -84,7 +84,7 @@ public class PreviousMonthDao implements IPreviousMonthDao {
             ex.getMessage();
         }
 
-        return AppDataArrayList;
+        return previousMonthArrayList;
     }
 
 
