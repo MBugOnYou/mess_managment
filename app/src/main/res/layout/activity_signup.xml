@@ -130,6 +130,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@drawable/roundbutton"
+            android:textColor="@android:color/white"
             android:onClick="clickSignin"
             android:text="Sign in"
             android:textSize="22sp" />
@@ -139,6 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@android:color/white"
             android:background="@drawable/roundbutton"
             android:onClick="clickSignup"
             android:text="Sign up"

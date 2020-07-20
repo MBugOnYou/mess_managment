@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.mealmanagement.adapter.CalculateMillRateAdapter;
 import com.example.mealmanagement.constant.Constant;
 import com.example.mealmanagement.dao.IPreviousMonthDao;
@@ -51,6 +53,10 @@ public class PreviousMonthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_month2);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Previous Month");
 
 
         isFromAdmin = getIntent().getIntExtra("isFromAdmin",0);
@@ -213,4 +219,21 @@ public class PreviousMonthActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Bungee.swipeRight(LatestCueCard.this);
+        Animatoo.animateSwipeRight(PreviousMonthActivity.this);
+    }
+
 }

@@ -9,32 +9,40 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/txtMonthName"
+        android:gravity="center"
+        android:layout_margin="5dp"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content">
 
     </TextView>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/txtTotalCost"
+        android:layout_margin="5dp"
+        android:gravity="center"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content">
 
     </TextView>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/txttotalMeal"
+        android:layout_margin="5dp"
+        android:gravity="center"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content">
 
     </TextView>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/txtMillRate"
+        android:layout_margin="5dp"
+        android:gravity="center"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content">
 
@@ -45,8 +53,11 @@
     <Button
         android:layout_width="match_parent"
         android:id="@+id/btnCalculate"
+        android:textColor="@android:color/white"
+        android:layout_margin="20dp"
+        android:background="@drawable/roundbutton"
         android:text="Upload Mill Rate"
-        android:layout_height="wrap_content">
+        android:layout_height="40dp">
 
     </Button>
 
@@ -55,6 +66,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -120,6 +133,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 

@@ -68,6 +68,12 @@ public class CalculateMealRateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_month);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Calculate Meal Rate");
+
+
         txttotalMeal=findViewById(R.id.txttotalMeal);
         txtMonthName = findViewById(R.id.txtMonthName);
         txtTotalCost = findViewById(R.id.txtTotalCost);
@@ -650,5 +656,7 @@ public class CalculateMealRateActivity extends AppCompatActivity {
 
 
     }
+
+
 
 }

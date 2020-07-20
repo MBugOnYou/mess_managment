@@ -14,6 +14,7 @@
         <TextView
             android:id="@+id/textView19"
             android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Breakfast"
@@ -23,6 +24,7 @@
             android:id="@+id/inputBreakfast"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
@@ -41,6 +43,7 @@
             android:id="@+id/textView20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:text="Lunch"
             android:textSize="18sp" />
@@ -49,6 +52,7 @@
             android:id="@+id/inputLunch"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
@@ -65,6 +69,7 @@
         <TextView
             android:id="@+id/textview21"
             android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Dinner"
@@ -74,6 +79,7 @@
             android:id="@+id/inputDinner"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"

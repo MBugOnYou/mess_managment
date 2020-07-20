@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/logout"
-        android:icon="@android:drawable/star_big_on"
+        android:icon="@android:drawable/ic_lock_idle_lock"
         app:showAsAction="always"
         android:title="Logout" />
 
