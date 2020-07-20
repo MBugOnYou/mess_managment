@@ -426,11 +426,18 @@ public class CalculateMealRateActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
 
-                                    txtTotalCost.setText("TotalCost: " + totalCost + "");
-                                    txtMonthName.setText("Month: " + yearMonth + "");
-                                    txttotalMeal.setText("Total Meal: "+ totalMeal+"");
-                                     millrate = totalCost / totalMeal;
-                                    txtMillRate.setText("Mill Rate: " + millrate + "");
+                                    try{
+
+                                        txtTotalCost.setText("TotalCost: " + totalCost + "");
+                                        txtMonthName.setText("Month: " + yearMonth + "");
+                                        txttotalMeal.setText("Total Meal: "+ totalMeal+"");
+                                        millrate = totalCost / totalMeal;
+                                        txtMillRate.setText("Mill Rate: " + millrate + "");
+
+                                    }catch (Exception e){
+
+                                    }
+
 
                                 }
                             });

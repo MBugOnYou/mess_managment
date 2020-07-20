@@ -25,9 +25,12 @@
         <activity android:name=".Admin" />
         <activity android:name=".User" />
         <activity android:name=".MessJoin" />
-        <activity android:name=".MessCreate" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
