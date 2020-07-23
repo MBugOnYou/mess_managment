@@ -1,9 +1,11 @@
 package com.example.mealmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -124,35 +126,12 @@ public class Signup extends AppCompatActivity {
         userInfo.setManager(0);
         userInfo.setMess_name("");
         userInfo.setPassword(inputPassword.getText().toString());
-        userInfo.setMail(inputMail.getText().toString());
+        userInfo.setMail(inputMail.getText().toString().trim());
         userInfo.setName(inputNickname.getText().toString());
 
 
-        loginwithSocialMedia(userInfo,false);
+        SigninorSingUpToServer(userInfo,false);
 
-
-////        check uniqe and create new account
-//        databaseReference = FirebaseDatabase.getInstance().getReference("userInfo");
-//        databaseReference.orderByChild("Mail").equalTo(mail).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                String check = String.valueOf(dataSnapshot.getValue());
-//                if ( check.equals("null")){
-//                    Log.i("New account create", String.valueOf(dataSnapshot.getValue()));
-//                    createAccount();
-//                }
-//                else {
-////                    logical error toast message - saiful
-//                    Log.i("-------- else ", String.valueOf(dataSnapshot.getValue()));
-//                    ToastMessage("this mail already signup");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
     }
 
@@ -170,11 +149,11 @@ public class Signup extends AppCompatActivity {
         userInfo.setManager(0);
         userInfo.setMess_name("");
         userInfo.setPassword(inputPassword.getText().toString());
-        userInfo.setMail(inputMail.getText().toString());
+        userInfo.setMail(inputMail.getText().toString().trim());
         userInfo.setName("");
 
 
-        loginwithSocialMedia(userInfo,true);
+        SigninorSingUpToServer(userInfo,true);
 
     }
 
@@ -184,24 +163,8 @@ public class Signup extends AppCompatActivity {
 
 
 
-//    public void createAccount(){
-//        databaseReference = FirebaseDatabase.getInstance().getReference("userInfo");
-//        databaseReference.child(String.valueOf(userID+increment)).child("Nickname").setValue(nickName);
-//        databaseReference.child(String.valueOf(userID+increment)).child("Mail").setValue(mail);
-//        databaseReference.child(String.valueOf(userID+increment)).child("Password").setValue(password);
-//        databaseReference.child(String.valueOf(userID+increment)).child("MessName").setValue("Null");
-//        databaseReference.child(String.valueOf(userID+increment)).child("Manager").setValue("Null");
-//        databaseReference.child(String.valueOf(userID+increment)).child("Approve").setValue("Null");
-//        ToastMessage("successful");
-//        Intent intent = new Intent( this, MessJoin.class);
-//        startActivity(intent);
-//    }
-//    -------------- end ----------------
 
-
-
-
-    private void loginwithSocialMedia(UserInfo userInfo, boolean islogin) {
+    private void SigninorSingUpToServer(UserInfo userInfo, boolean islogin) {
 
         showProgress(Signup.this);
 
@@ -271,6 +234,22 @@ public class Signup extends AppCompatActivity {
                         @Override
                         public void run() {
 
+                            try{
+
+                                String message = response.getString("message");
+
+                                if(message!=null && message.length()>0) {
+                                    showAlertUser(message);
+                                    return;
+                                }
+
+
+                            }catch (Exception e){
+
+                            }
+
+
+
 
                             try {
 
@@ -293,20 +272,23 @@ public class Signup extends AppCompatActivity {
                                     if(manager==1){
                                         startActivity(new Intent(Signup.this,Admin.class));
                                         Animatoo.animateSwipeLeft(Signup.this);
+                                        finish();
                                     }else if(manager == 0 && approve==1){
 
                                         Intent intent = new Intent(Signup.this, User.class);
                                         startActivity(intent);
                                         Animatoo.animateSwipeLeft(Signup.this);
+                                        finish();
 
                                     }
                                     else {
                                         Intent intent = new Intent(Signup.this, MessJoin.class);
                                         startActivity(intent);
                                         Animatoo.animateSwipeLeft(Signup.this);
+                                        finish();
                                     }
 
-                                    finish();
+
 
 
 
@@ -362,6 +344,27 @@ public class Signup extends AppCompatActivity {
             dismissProgress(Signup.this);
 
         }
+
+    }
+
+
+    private void showAlertUser(final String message) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(Signup.this).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage(message);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
 
     }
 

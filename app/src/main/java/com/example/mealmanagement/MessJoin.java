@@ -1,8 +1,10 @@
 package com.example.mealmanagement;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -393,9 +395,14 @@ public class MessJoin extends AppCompatActivity implements AdapterView.OnItemSel
                                         Animatoo.animateSwipeLeft(MessJoin.this);
 
                                     }else{
-                                        Intent intent = new Intent( MessJoin.this, User.class );
-                                        startActivity( intent );
-                                        Animatoo.animateSwipeLeft(MessJoin.this);
+
+
+
+//                                        Intent intent = new Intent( MessJoin.this, User.class );
+//                                        startActivity( intent );
+//                                        Animatoo.animateSwipeLeft(MessJoin.this);
+
+                                        showAlertUser();
 
                                     }
 
@@ -456,6 +463,25 @@ public class MessJoin extends AppCompatActivity implements AdapterView.OnItemSel
 
     }
 
+    private void showAlertUser() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(MessJoin.this).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage("Please wait for Admin approval");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+
+    }
 
 
     @Override

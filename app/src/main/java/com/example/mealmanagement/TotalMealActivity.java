@@ -130,6 +130,12 @@ public class TotalMealActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(TotalMealActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
 
             final String requestBody = params.toString();
 
@@ -254,6 +260,11 @@ public class TotalMealActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(TotalMealActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             final String requestBody = params.toString();

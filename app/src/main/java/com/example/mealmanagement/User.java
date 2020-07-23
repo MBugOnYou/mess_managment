@@ -217,6 +217,14 @@ public class User extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(User.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,Constant.createDailyMeal, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(final JSONObject response) {
@@ -322,6 +330,12 @@ public class User extends AppCompatActivity {
 
             try {
                 params.put("creation_date", DateUtil.GetFormatedDateString(new Date()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(User.this));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

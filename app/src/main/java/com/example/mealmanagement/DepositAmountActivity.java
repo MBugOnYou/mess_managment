@@ -164,6 +164,11 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DepositAmountActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             final String requestBody = params.toString();
@@ -277,6 +282,11 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
             }
 
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DepositAmountActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             final String requestBody = params.toString();
 
@@ -415,6 +425,12 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
 
             try {
                 params.put("user_id", PreferenceConnector.getID(DepositAmountActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DepositAmountActivity.this));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -583,6 +599,12 @@ public class DepositAmountActivity extends AppCompatActivity implements AdapterV
         try {
 
             JSONObject params = new JSONObject();
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DepositAmountActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             final String requestBody = params.toString();

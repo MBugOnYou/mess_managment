@@ -148,6 +148,13 @@ public class DailyCostActivity extends AppCompatActivity {
             }
 
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DailyCostActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
 
             final String requestBody = params.toString();
 
@@ -267,6 +274,11 @@ public class DailyCostActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(DailyCostActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             final String requestBody = params.toString();

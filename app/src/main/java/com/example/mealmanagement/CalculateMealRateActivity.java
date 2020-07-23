@@ -35,6 +35,7 @@ import com.example.mealmanagement.model.DepositAmount;
 import com.example.mealmanagement.model.PreviousMonth;
 import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.DateUtil;
+import com.example.mealmanagement.util.PreferenceConnector;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.json.JSONException;
@@ -201,6 +202,12 @@ public class CalculateMealRateActivity extends AppCompatActivity {
 
             try {
                 params.put("yr_month", yearMonth);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(CalculateMealRateActivity.this));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -382,6 +389,11 @@ public class CalculateMealRateActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(CalculateMealRateActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             final String requestBody = params.toString();
@@ -572,6 +584,12 @@ public class CalculateMealRateActivity extends AppCompatActivity {
 
             try {
                 params.put("yr_month", yearMonth);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(CalculateMealRateActivity.this));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

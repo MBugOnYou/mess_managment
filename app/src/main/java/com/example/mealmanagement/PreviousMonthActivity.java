@@ -120,6 +120,13 @@ public class PreviousMonthActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            try {
+                params.put("mess_name", PreferenceConnector.getMessname(PreviousMonthActivity.this));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
             if(isFromAdmin==0){
                 url = Constant.getPreviousMonthByUserID;
                 try {
