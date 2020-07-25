@@ -138,6 +138,7 @@ public class CalculateMealRateActivity extends AppCompatActivity {
 
 
         }else{
+            currentPosition = 0;
             dismissProgress(CalculateMealRateActivity.this);
             getAllPreviousMontdataFromServer();
 
