@@ -38,4 +38,5 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.mohammadatif:Animatoo:master'
     implementation 'com.kaopiz:kprogresshud:1.2.0'
+    implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
 }

@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,6 +30,9 @@ import com.example.mealmanagement.model.PreviousMonth;
 import com.example.mealmanagement.model.UserInfo;
 import com.example.mealmanagement.util.DateUtil;
 import com.example.mealmanagement.util.PreferenceConnector;
+import com.github.dewinjm.monthyearpicker.MonthFormat;
+import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
+import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import org.json.JSONException;
@@ -47,7 +52,9 @@ public class PreviousMonthActivity extends AppCompatActivity {
     CalculateMillRateAdapter calculateMillRateAdapter;
     LinearLayoutManager mLayoutManager;
     int isFromAdmin = 0;
-
+    TextView txtselectedMonthDate;
+    Button btnSelectMonthYear,btnLoadData;
+    String yearMonth = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,84 @@ public class PreviousMonthActivity extends AppCompatActivity {
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(calculateMillRateAdapter);
 
+        txtselectedMonthDate = findViewById(R.id.txtselectedMonthDate);
+        btnSelectMonthYear = findViewById(R.id.btnSelectMonthYear);
+        btnSelectMonthYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                ShowMonthYearDialog();
+
+            }
+        });
+
+        btnLoadData = findViewById(R.id.btnLoadData);
+        btnLoadData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String monthYear = txtselectedMonthDate.getText().toString();
+
+                if(monthYear==null || monthYear.equals("")){
+
+                    return;
+                }else{
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            calculateMillRateAdapter.setData(new ArrayList<PreviousMonth>());
+                            calculateMillRateAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+                    getAllPreviousMontdataFromServer();
+                }
+
+
+            }
+        });
+
+
+
+
+
+
+    }
+
+    private void ShowMonthYearDialog() {
+
+        try{
+
+            int yearSelected;
+            final int monthSelected;
+            //Set default values
+            Calendar calendar = Calendar.getInstance();
+            yearSelected = calendar.get(Calendar.YEAR);
+            monthSelected = calendar.get(Calendar.MONTH);
+
+            //MonthFormat monthFormat = MonthFormat.LONG;
+            MonthYearPickerDialogFragment dialogFragment = MonthYearPickerDialogFragment
+                    .getInstance(monthSelected, yearSelected);
+
+            dialogFragment.show(getSupportFragmentManager(), null);
+
+            dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(int year, int monthOfYear) {
+                    // do something
+                    int selectedYear = year;
+                    int selectedMonth = monthOfYear;
+                    yearMonth = selectedYear+"-"+DateUtil.getMonth(selectedMonth);
+                    txtselectedMonthDate.setText(yearMonth);
+
+
+                }
+            });
+
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -89,23 +173,23 @@ public class PreviousMonthActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        getAllPreviousMontdataFromServer();
+
     }
 
     private void getAllPreviousMontdataFromServer() {
 
 
-        // showProgress(PreviousMonthActivity.this);
+         showProgress(PreviousMonthActivity.this);
 
         String url = "";
 
-        Calendar c = Calendar.getInstance();
-
-         String yearMonth = "";
-
-
-            c.add(Calendar.MONTH, -1);
-            yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
+//        Calendar c = Calendar.getInstance();
+//
+//         String yearMonth = "";
+//
+//
+//            c.add(Calendar.MONTH, -1);
+//            yearMonth = DateUtil.getYear(new Date())+"-"+DateUtil.getMonth(c.get(Calendar.MONTH));
 
 
 
@@ -181,7 +265,7 @@ public class PreviousMonthActivity extends AppCompatActivity {
 
 
 
-                    //dismissProgress(PreviousMonthActivity.this);
+                    dismissProgress(PreviousMonthActivity.this);
 
 
                 }
@@ -189,7 +273,7 @@ public class PreviousMonthActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
-                    //dismissProgress(PreviousMonthActivity.this);
+                    dismissProgress(PreviousMonthActivity.this);
 
                 }
             }) {
@@ -210,7 +294,7 @@ public class PreviousMonthActivity extends AppCompatActivity {
             MyApplication.getInstance().addToRequestQueue(stringRequest, "string_req");
         } catch (Exception e) {
             e.getMessage();
-            //dismissProgress(PreviousMonthActivity.this);
+            dismissProgress(PreviousMonthActivity.this);
 
 
         }
@@ -225,6 +309,50 @@ public class PreviousMonthActivity extends AppCompatActivity {
 
 
 
+    }
+
+    void showProgress(final Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    hud = KProgressHUD.create(context)
+                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                            .setLabel("Please wait")
+                            .setCancellable(true)
+                            .setAnimationSpeed(2)
+                            .setDimAmount(0.5f)
+                            .show();
+                }
+            });
+
+        } catch (Exception e) {
+
+
+        }
+
+    }
+
+    void dismissProgress(Context context) {
+
+
+        try {
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (hud != null && hud.isShowing()) {
+                        hud.dismiss();
+                        hud = null;
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.getMessage();
+
+        }
     }
 
     @Override

@@ -74,6 +74,11 @@ public class PreviousMonthDao implements IPreviousMonthDao {
                         } catch (Exception ex) {
                         }
 
+                        try {
+                            appData.setName(jsonObject.getString("name"));
+                        } catch (Exception ex) {
+                        }
+
                         previousMonthArrayList.add(appData);
                     }
                 }

@@ -38,7 +38,7 @@ public class Admin extends AppCompatActivity {
     KProgressHUD hud;
     LinearLayout lnRemoveMember,lnAddMember,linDepositAmount,linTotalMeal,linPreviousMonth,linDailyCost,linCalculateMealRate;
 
-    TextView totalMeal;
+    TextView totalMeal,txtmessName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,9 @@ public class Admin extends AppCompatActivity {
         getSupportActionBar().setTitle("Admin Panel");
 
         totalMeal = findViewById(R.id.totalMeal);
+        txtmessName = findViewById(R.id.txtmessName);
 
+        txtmessName.setText(PreferenceConnector.getMessname(Admin.this));
 
         linDailyCost = findViewById(R.id.linDailyCost);
         linDailyCost.setOnClickListener(new View.OnClickListener() {

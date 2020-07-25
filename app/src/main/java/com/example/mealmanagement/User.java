@@ -44,7 +44,7 @@ public class User extends AppCompatActivity {
 
     KProgressHUD hud;
     LinearLayout linDepositAmount,lintotalmeal,linPreviousMonth;
-
+    TextView txtmessName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +52,9 @@ public class User extends AppCompatActivity {
 
         getSupportActionBar().setTitle("User Panel");
 
+
+        txtmessName = findViewById(R.id.txtmessName);
+        txtmessName.setText(PreferenceConnector.getMessname(User.this));
 
         linPreviousMonth =findViewById(R.id.linPreviousMonth);
         linPreviousMonth.setOnClickListener(new View.OnClickListener() {

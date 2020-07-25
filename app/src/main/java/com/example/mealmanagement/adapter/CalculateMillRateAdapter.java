@@ -61,7 +61,7 @@ public class CalculateMillRateAdapter extends RecyclerView.Adapter<CalculateMill
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final PreviousMonth previousMonth = previousMonthArrayList.get(position);
 
-        holder.txtname1.setText(previousMonth.getUser_id()+"");
+        holder.txtname1.setText(previousMonth.getName()+"");
         holder.txtmealRate.setText(previousMonth.getMeal_rate()+"");
         holder.txtDeposit.setText(previousMonth.getTotal_deposit()+"");
 

@@ -73,8 +73,9 @@
         <TextView
             android:layout_width="match_parent"
             android:id="@+id/txtname1"
-            android:text="ID"
+            android:text="Name"
             android:textColor="@android:color/black"
+            android:gravity="center"
             android:textStyle="bold"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -85,6 +86,7 @@
             android:layout_width="match_parent"
             android:id="@+id/txtmealRate"
             android:text="MealRate"
+            android:gravity="center"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:layout_weight="1"
@@ -96,6 +98,7 @@
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:text="Deposit"
+            android:gravity="center"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"></TextView>
@@ -105,6 +108,7 @@
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:text="Cost"
+            android:gravity="center"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"></TextView>
@@ -114,6 +118,7 @@
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:text="Extra"
+            android:gravity="center"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"></TextView>
@@ -123,6 +128,7 @@
             android:text="Given"
             android:textColor="@android:color/black"
             android:textStyle="bold"
+            android:gravity="center"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"></TextView>

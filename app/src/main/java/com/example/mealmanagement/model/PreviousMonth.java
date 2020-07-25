@@ -10,6 +10,7 @@ public class PreviousMonth {
     int extra_money;
     int given_money;
     String yr_month;
+    String name;
 
 
     public PreviousMonth() {
@@ -21,6 +22,7 @@ public class PreviousMonth {
         this.extra_money = 0;
         this.given_money = 0;
         this.yr_month = "";
+        this.name = "";
     }
 
     public int getId() {
@@ -85,6 +87,14 @@ public class PreviousMonth {
 
     public void setYr_month(String yr_month) {
         this.yr_month = yr_month;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
